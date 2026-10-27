@@ -1,71 +1,93 @@
-# SWIVEL
+<p align="center">
+  <img src="docs/assets/swivel-banner.svg" alt="SWIVEL — see what's broadcasting around you" width="100%">
+</p>
 
-**Read what’s broadcasting around you.**
+<p align="center">
+  <strong>See what's broadcasting around you.</strong><br>
+  A passive, privacy-first Wi-Fi &amp; Bluetooth scanner for Android that flags nearby cameras, trackers, and surveillance gear — using only your phone.
+</p>
 
-By **idea grey**.
+<p align="center">
+  <img alt="platform" src="https://img.shields.io/badge/platform-Android%208.0%2B-55F5A0?style=flat-square">
+  <img alt="license" src="https://img.shields.io/badge/license-MIT-55F5A0?style=flat-square">
+  <img alt="privacy" src="https://img.shields.io/badge/radio-receive--only-4DA6FF?style=flat-square">
+  <img alt="no tracking" src="https://img.shields.io/badge/accounts-none-4DA6FF?style=flat-square">
+  <img alt="offline" src="https://img.shields.io/badge/data-stays%20on%20device-4DA6FF?style=flat-square">
+</p>
 
-SWIVEL is an Android app for nearby Wi-Fi and Bluetooth signals. See live signal strength, inspect camera-maker and tracker signatures, and find public safety manufacturer matches, including Flock Safety and Axon/TASER. Use the phone on its own, or connect a compatible CYD over USB for additional radio observations.
+---
 
-## Download SWIVEL
+## What it is
 
-**[Download the installable SWIVEL APK](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE.apk)**
+SWIVEL turns an ordinary Android phone into a passive radio scanner. It listens to the Wi-Fi and Bluetooth advertisements already in the air around you, then classifies what it finds — surveillance cameras, item trackers (AirTag, Tile, SmartTag…), and public-safety gear (Flock, Axon/TASER, Motorola) — against a bundled, offline device database.
 
-The actual signed file is also available at the repository’s top level: **[MILLIE.apk](MILLIE.apk)**. On its GitHub file page, choose **Download raw file**. You do not need to build the source code.
+It is **receive-only**. It never transmits, never phones home, and never asks you to sign in. Everything stays on your phone.
 
-| Download | What it is |
-| --- | --- |
-| **[MILLIE.apk](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE.apk)** | Signed Android app **2.0.14**. Start here. |
-| [MILLIE-CYD-2.0.4.bin](https://github.com/IDEAGREY/MILLIE/releases/download/v2.0.14/MILLIE-CYD-2.0.4.bin) | Optional CYD firmware **2.0.4**, for the hardware and existing flash layout described below. |
-| [Release and all downloads](https://github.com/IDEAGREY/MILLIE/releases/tag/v2.0.14) | Source packages, checksums, and installation notes. |
+<p align="center">
+  <img src="docs/assets/screenshot-live.png" alt="SWIVEL live radar screen" width="300">
+</p>
 
-The app and firmware have different version numbers. **Android 2.0.14 + CYD 2.0.4 is the published pair.** These are the only current app and firmware downloads. Older installer assets have been retired; original release records, tags, and Git history remain.
+## Why it's private by design
 
-## What it does
+- **Receive-only.** SWIVEL only *listens*. It sends no packets, runs no attacks, and can't interfere with any network.
+- **No internet.** Device lookups use a bundled offline IEEE registry. The app makes no network calls.
+- **No accounts, no analytics.** Nothing to sign up for, nothing phoned home.
+- **Your data stays local.** Detections are kept on-device; you choose if and when to export them. A one-tap **duress wipe** clears the session and deletes any exports.
+
+## What it detects
 
 | View | What you get |
 | --- | --- |
-| **Live** | Wi-Fi and BLE observations, a signal-strength scope, and a chart showing how many recently seen signals fall into each strength range. Wi-Fi is orange; BLE is blue. |
-| **Cameras** | IEEE manufacturer matches for camera makers such as Ring, Wyze, Axis, Hikvision, Dahua, Reolink, and others. Known advertised router names and Arlo base-station names are excluded from the camera list. |
-| **Trackers** | Apple Find My advertisement signatures, Tile and Samsung SmartTag service signatures, and explicitly advertised tracker names. A Find My signature does not prove a device is an AirTag. |
-| **Public Safety** | Flock Safety, Axon/TASER, Motorola Solutions, WatchGuard Video, and Digital Ally manufacturer matches. Assigned Bluetooth identifiers provide additional Axon/TASER and Motorola evidence when advertised. |
-| **Signal details** | Signal history, address, manufacturer, match evidence, source, observation ages, and the radio fields actually received. Phone and CYD readings are shown separately. |
+| **Live** | Wi-Fi and BLE observations, a signal-strength radar scope, and a distribution chart. Wi-Fi is amber; BLE is blue. |
+| **Cameras** | IEEE manufacturer matches for camera makers — Ring, Wyze, Axis, Hikvision, Dahua, Reolink, Nest, Arlo, and more. Known router and Arlo base-station names are excluded. |
+| **Trackers** | Apple Find My signatures, Tile and Samsung SmartTag service UUIDs, Chipolo/Pebblebee, and explicitly advertised tracker names. |
+| **Public Safety** | Flock Safety, Axon/TASER, Motorola Solutions, WatchGuard Video, and Digital Ally — by IEEE vendor and Bluetooth SIG identifiers. |
+| **Threat** | Evil-twin and karma/pineapple heuristics, BLE advertisement swarms, and (with a CYD) Wi-Fi deauth/attack detection. |
+| **Signal details** | Full signal history, address, manufacturer, match evidence, source, observation ages, and the raw radio fields received. |
 
-**A signature is evidence, not a confirmed product.** An IEEE MAC assignment identifies an organization. Some camera makers also sell routers, hubs, alarms, or recorders. Hidden network names and weak signal strength do not prove a camera. Flock or Axon matches do not establish an exact model, a recording state, or the presence of police. Devices that are silent or omit identifiable broadcasts can be missed. The radar shows signal strength; it does not locate devices or measure direction or distance.
+> **A signature is evidence, not proof.** An IEEE assignment identifies an *organization*, not a confirmed product or its state. Some camera makers also sell routers and hubs; a Find My signature doesn't prove an AirTag; a Flock or Axon match doesn't establish a model, recording state, or the presence of police. Silent devices can be missed. The radar shows signal strength — it does not locate or measure distance.
 
-## Start with just your phone
+## Install
 
-1. Use an **Android 8.0+** phone with Wi-Fi and Bluetooth, and download **MILLIE.apk** above. No Termux is needed for this version.
-2. Open the APK. If Android asks, allow installation from the browser or file manager you used.
-3. Open **SWIVEL**. Grant location and nearby-device/Bluetooth scan permissions, and keep Wi-Fi, Bluetooth, and Android location services on.
-4. Tap **PHONE SCAN** if scanning has not started. Tap any signal for its details.
+**Build it yourself** (works today, see below), or grab a signed build from the [Releases page](https://github.com/officialtomblack/MILLIEBLK/releases) once published. An F-Droid listing is planned.
 
-The app uses an offline IEEE registry for manufacturer lookups. Phone Wi-Fi scan frequency and cached results are controlled by Android. Bluetooth scanning and Wi-Fi requests run independently; adding a CYD does not turn phone scanning off.
+1. Install the APK (enable "install unknown apps" for your browser/file manager if prompted).
+2. Open **SWIVEL** and grant **Location** and **Nearby devices / Bluetooth**. Keep Wi-Fi, Bluetooth, and location services on.
+3. Tap **PHONE SCAN**. Tap any signal for its full details.
 
-**Updating an older install:** this APK uses a dedicated release certificate for idea grey. Android rejects an update over earlier debug-signed builds of `com.millie.civops2`. Those builds must be removed before installing this release, which can remove their local app data. Future APKs signed with this same release key can update this release normally.
+> Requires **Android 8.0+**. Wi-Fi scan cadence and caching are controlled by Android. No Termux, no root.
 
-## Add a CYD
+## Build from source
 
-The CYD is optional. It can also scan and display its radar and scrolling logs without a phone.
+Needs **JDK 17** and the Android SDK (`ANDROID_SDK_ROOT` set, or `local.properties` → `sdk.dir`).
 
-1. Check the [hardware and firmware guide](docs/millie2-cyd.md) before flashing. The download is an **app-partition image**, not a universal full-flash image.
-2. Connect the supported CYD to an Android USB host/OTG port with a **data cable**.
-3. Open SWIVEL, tap **CYD LINK** if needed, and accept Android’s USB permission prompt.
-4. Leave phone scanning on. **PHONE + CYD** indicates both are active. Shared Wi-Fi/BLE addresses merge into one record while retaining each receiver’s observations.
+```bash
+cd millie2/android
+./gradlew assembleDebug
+# → app/build/outputs/apk/debug/app-debug.apk
+```
 
-The CYD adds **2.4 GHz Wi-Fi management/data frame observations**, aggregated Wi-Fi control-frame counts, and **BLE advertisements**. Its Wi-Fi and BLE reception share one ESP32 radio. The Android app owns all manufacturer, camera, tracker, and public safety classification; the firmware sends raw observations. The CYD display needs **no touch input**.
+Full build notes: [millie2/android/README.md](millie2/android/README.md).
 
-## Sources and verification
+## Optional: add a CYD (ESP32)
 
-- [Android source and build instructions](millie2/android/README.md)
-- [CYD source and build instructions](millie2/firmware/README.md)
-- [Connected phone/CYD and deduplication checks](docs/millie2-verification.md)
-- [Public safety matching, exclusions, and primary sources](docs/millie2-public-safety.md)
-- [IEEE registry provenance](millie2/android/app/src/main/assets/IEEE_REGISTRY_SOURCE.txt)
+The phone works entirely on its own. For more reach, a [CYD](docs/millie2-cyd.md) (an ESP32 board) plugs in over USB and adds what a phone's radios physically can't see: **2.4 GHz Wi-Fi management/control frames** and **deauth / attack detection**, plus a second scanning radio.
 
-The app’s scan processing and USB recovery were tested on a Moto G Play 2024 with the supported CYD. Public safety classifier tests used controlled inputs; they do not establish a real nearby Flock or Axon detection.
+1. Flash the firmware (see the [hardware guide](docs/millie2-cyd.md) — it's an app-partition image, not a full-flash).
+2. Connect the CYD to a USB-OTG port with a **data cable**.
+3. Open SWIVEL, tap **CYD LINK**, accept the USB prompt. **PHONE + CYD** means both are active; shared devices merge into one record.
 
-## Project history
+The Android app owns all classification; the firmware only streams raw observations. No touch input needed on the CYD.
 
-SWIVEL’s GitHub repository was created on **July 15, 2026**, and its original July releases are preserved as historical records. See the [dated project history](docs/project-history.md) for links to the original commit and releases. The current Android 2.0.14 / CYD 2.0.4 downloads are newer; those versions are not being presented as the July builds.
+## Verification
 
-Older APKs, the superseded root CYD sketch/flasher, and the insecure Termux/Flask installer (`setup_millie.sh`) have been removed from the current repository files. Historical source remains in Git history. The current product is the standalone Android app under `millie2/android/`; a CYD over USB is an optional add-on.
+Verified on a **Samsung Galaxy A12 (Android 12)**: live Wi-Fi + BLE scanning, device classification, the runtime permission flow (including the background-location step), and CSV/KML export all confirmed on-device. The Android 14/15 location-foreground-service path and screen-off scanning are not yet device-verified.
+
+More: [parallel scans & dedup](docs/millie2-verification.md) · [public-safety matching & sources](docs/millie2-public-safety.md) · [IEEE registry provenance](millie2/android/app/src/main/assets/IEEE_REGISTRY_SOURCE.txt).
+
+## Credits & license
+
+Maintained by [**@officialtomblack**](https://github.com/officialtomblack) — a privacy-focused, security-hardened fork.
+Originally created as **MILLIE** by *idea grey* ([upstream](https://github.com/IDEAGREY/MILLIE)); see [docs/project-history.md](docs/project-history.md) for lineage.
+
+Licensed under the **MIT License** — © 2026 tcmidiservices. See [LICENSE](LICENSE).

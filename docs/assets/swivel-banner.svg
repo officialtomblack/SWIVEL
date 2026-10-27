@@ -1,0 +1,35 @@
+<svg viewBox="0 0 680 200" width="680" height="200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SWIVEL">
+<defs>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" stop-color="#55F5A0" stop-opacity="0.16"/>
+<stop offset="100%" stop-color="#55F5A0" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0.6">
+<stop offset="0%" stop-color="#55F5A0" stop-opacity="0.5"/>
+<stop offset="100%" stop-color="#55F5A0" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<rect x="1" y="1" width="678" height="198" rx="22" fill="#060A08" stroke="#17261D"/>
+<circle cx="120" cy="100" r="96" fill="url(#glow)"/>
+<g fill="none" stroke="#55F5A0">
+<circle cx="120" cy="100" r="20" stroke-opacity="0.55"/>
+<circle cx="120" cy="100" r="40" stroke-opacity="0.38"/>
+<circle cx="120" cy="100" r="60" stroke-opacity="0.26"/>
+<circle cx="120" cy="100" r="80" stroke-opacity="0.18"/>
+</g>
+<g stroke="#55F5A0" stroke-opacity="0.12">
+<line x1="40" y1="100" x2="200" y2="100"/>
+<line x1="120" y1="20" x2="120" y2="180"/>
+</g>
+<path d="M120 100 L120 20 A80 80 0 0 1 189 60 Z" fill="url(#sweep)"/>
+<line x1="120" y1="100" x2="189" y2="60" stroke="#55F5A0" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="150" cy="66" r="3.4" fill="#55F5A0"/>
+<circle cx="150" cy="66" r="9" fill="none" stroke="#55F5A0" stroke-opacity="0.45"/>
+<circle cx="90" cy="132" r="2.6" fill="#4DA6FF"/>
+<circle cx="162" cy="140" r="2.2" fill="#72847C"/>
+<circle cx="120" cy="100" r="3" fill="#55F5A0"/>
+<text x="250" y="92" font-family="monospace" font-size="58" font-weight="bold" fill="#55F5A0" letter-spacing="7">SWIVEL</text>
+<text x="252" y="123" font-family="monospace" font-size="13" fill="#72847C" letter-spacing="3">SEE WHAT'S BROADCASTING AROUND YOU</text>
+<line x1="252" y1="137" x2="496" y2="137" stroke="#17261D"/>
+<text x="252" y="159" font-family="monospace" font-size="12" fill="#4DA6FF" letter-spacing="2">WI-FI  ·  BLE  ·  TRACKERS  ·  CAMERAS</text>
+</svg>
