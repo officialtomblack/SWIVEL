@@ -1,6 +1,6 @@
-# MILLIE CYD firmware 2.0.4
+# SWIVEL CYD firmware 2.0.4
 
-Developer: **idea grey**. Optional companion for MILLIE Android **2.0.14**.
+Developer: **idea grey**. Optional companion for SWIVEL Android **2.0.14**.
 
 The bare CYD scans locally, shows a radar and scrolling logs, and streams raw Wi-Fi/BLE observations to Android over USB serial at 115200 baud. Wi-Fi is orange and BLE is blue. Touch input is not used. Camera, tracker, and public safety classification belongs to the Android app.
 
@@ -29,4 +29,4 @@ c++ -std=c++17 tests/core_test.cpp -o /tmp/millie-core-test
 
 The onboard ESP32 radio is limited to 2.4 GHz Wi-Fi and BLE reception. It shares Wi-Fi/BLE time, and Wi-Fi hops one channel at a time. The radar does not estimate direction or distance. There is no 5 GHz, Bluetooth Classic, GPS, NFC, UWB, cellular, Zigbee, or sub-GHz receiver in this build.
 
-Product reference: [SquachWatch-CYD](https://github.com/skizzophrenic/SquachWatch-CYD). Its source code was not imported; this firmware was developed from MILLIE’s local firmware.
+Product reference: [SquachWatch-CYD](https://github.com/skizzophrenic/SquachWatch-CYD). Its source code was not imported; this firmware was developed from SWIVEL’s local firmware.

@@ -1,4 +1,4 @@
-# MILLIE 2.0.11 public-safety coverage
+# SWIVEL 2.0.11 public-safety coverage
 
 The interface uses **PUBLIC SAFETY · manufacturer**. Charging docks do not receive a separate category or label. Matching evidence appears in the signal details. Classification lives in the Android app; the CYD supplies observations.
 
@@ -46,7 +46,7 @@ Axon's newer firmware can rotate Bluetooth addresses. An IEEE-only scan can miss
 
 ## Primary sources
 
-- [IEEE Registration Authority](https://standards.ieee.org/products-programs/regauth/). Prefix counts refer to MILLIE's bundled IEEE snapshot.
+- [IEEE Registration Authority](https://standards.ieee.org/products-programs/regauth/). Prefix counts refer to SWIVEL's bundled IEEE snapshot.
 - [Bluetooth SIG company identifiers](https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/company_identifiers/company_identifiers.yaml), retrieved October 16, 2026.
 - [Bluetooth SIG member service UUIDs](https://bitbucket.org/bluetooth-SIG/public/src/main/assigned_numbers/uuids/member_uuids.yaml), retrieved October 16, 2026.
 - [Axon: TASER International changes name to Axon](https://investor.axon.com/2017-04-05-Axon-Offers-Free-Body-Cameras-for-Every-Police-Officer-in-the-U-S).

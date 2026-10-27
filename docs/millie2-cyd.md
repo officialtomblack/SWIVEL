@@ -1,6 +1,6 @@
-# MILLIE 2.0: optional CYD firmware
+# SWIVEL 2.0: optional CYD firmware
 
-Use **MILLIE-CYD-2.0.4.bin** with the **MILLIE Android 2.0.14** app. The phone app works without this hardware.
+Use **MILLIE-CYD-2.0.4.bin** with the **SWIVEL Android 2.0.14** app. The phone app works without this hardware.
 
 ## Supported hardware
 
@@ -37,6 +37,6 @@ Write only the app partition:
 python -m esptool --chip esp32 --port YOUR_PORT --baud 115200 write-flash 0x10000 MILLIE-CYD-2.0.4.bin
 ```
 
-Do **not** run a whole-chip erase. Keep the backup private. After a successful write/verification, reset the board and check that the radar and scrolling log appear. Connect it to the phone by USB OTG, accept USB access, and check **PHONE + CYD** in MILLIE while phone scanning is enabled.
+Do **not** run a whole-chip erase. Keep the backup private. After a successful write/verification, reset the board and check that the radar and scrolling log appear. Connect it to the phone by USB OTG, accept USB access, and check **PHONE + CYD** in SWIVEL while phone scanning is enabled.
 
 The published image previously passed esptool hash verification on the supported board and booted as `civops-2.0.4`. A 15-second runtime check recorded Wi-Fi, BLE, and aggregate control-frame messages with zero queue drops in that check. This is a tested configuration, not validation of every CYD sold under a similar name.

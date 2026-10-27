@@ -797,7 +797,7 @@ void setup() {
   } else
     startWifi();
   sliceStart = millis();
-  Serial.printf("{\"_status\":\"MILLIE CIVOPS "
+  Serial.printf("{\"_status\":\"SWIVEL CIVOPS "
                 "boot\",\"fw\":\"%s\",\"standalone\":true,\"protocol\":1,\"touch_ready\":%s,"
                 "\"touch_cal\":%s}\n",
                 FW, touchReady ? "true" : "false",

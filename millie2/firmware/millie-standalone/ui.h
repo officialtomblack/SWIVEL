@@ -35,7 +35,7 @@ void button(C &c, int x, int y, int w, int h, const char *text, bool active = fa
 template <class C> void drawUI(C &c, Model &m, View &v) {
   c.fill(0, 0, 240, 320, BG);
   char b[96];
-  c.text(5, 5, "MILLIE CIVOPS", PINK);
+  c.text(5, 5, "SWIVEL CIVOPS", PINK);
   c.text(170, 5, v.linked ? "APP:RX" : "APP:--", v.linked ? CYAN : GREY);
   if (!v.storeOk)
     c.text(190, 20, "ST!", AMBER);

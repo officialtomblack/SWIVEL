@@ -1,6 +1,6 @@
-# MILLIE project history
+# SWIVEL project history
 
-MILLIE’s repository and original development records date to **July 2026**. These records establish the age of the project; the current Android **2.0.14** and CYD **2.0.4** downloads are the newer October release pair.
+SWIVEL’s repository and original development records date to **July 2026**. These records establish the age of the project; the current Android **2.0.14** and CYD **2.0.4** downloads are the newer October release pair.
 
 ## Original records
 
@@ -14,8 +14,8 @@ The original commits, tags, and release records have been retained without rewri
 
 Only the current installer pair is offered in the active repository files and release installer assets:
 
-- **[MILLIE Android 2.0.14](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE.apk)**
-- **[MILLIE CYD firmware 2.0.4](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE-CYD-2.0.4.bin)**
+- **[SWIVEL Android 2.0.14](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE.apk)**
+- **[SWIVEL CYD firmware 2.0.4](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE-CYD-2.0.4.bin)**
 
 The older APK release attachments, superseded root APKs, and root CYD sketch/flasher were retired to avoid confusing installations. Old commits and GitHub’s automatically generated historical source archives remain accessible as project history; they are not the recommended app/firmware downloads.
 

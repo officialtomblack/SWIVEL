@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <application android:theme="@android:style/Theme.Material.NoActionBar" android:label="MILLIE" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:usesCleartextTraffic="false">
+    <application android:theme="@android:style/Theme.Material.NoActionBar" android:label="SWIVEL" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:usesCleartextTraffic="false">
         <meta-data android:name="com.millie.developer" android:value="idea grey" />
         <service android:name=".CydLinkService" android:exported="false" android:foregroundServiceType="connectedDevice" android:stopWithTask="false" />
         <service android:name=".ScanService" android:exported="false" android:foregroundServiceType="connectedDevice|location" android:stopWithTask="false" />

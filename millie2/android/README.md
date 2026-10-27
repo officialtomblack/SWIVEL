@@ -1,8 +1,8 @@
-# MILLIE 2.0.14
+# SWIVEL 2.0.14
 
-Developer: idea grey. App name: MILLIE.
+Developer: idea grey. App name: SWIVEL.
 
-Fresh Android application for the MILLIE CivOps CYD firmware. Package ID: `com.millie.civops2` (separate from earlier MILLIE apps).
+Fresh Android application for the SWIVEL CivOps CYD firmware. Package ID: `com.millie.civops2` (separate from earlier SWIVEL apps).
 
 ## Signal views
 

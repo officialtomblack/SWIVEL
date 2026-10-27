@@ -49,7 +49,7 @@ final class SessionLog {
         return b.toString();
     }
     synchronized String toKml(){
-        StringBuilder b=new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><name>MILLIE session</name>\n");
+        StringBuilder b=new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><name>SWIVEL session</name>\n");
         for(Entry e:entries){
             if(!e.hasLocation())continue;
             String title=xml((e.name==null||e.name.isEmpty()?e.vendor:e.name)+" ("+e.kind.trim()+")");

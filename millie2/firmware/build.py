@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile the app-only image for the confirmed single-USB MILLIE CYD. Never flashes."""
+"""Compile the app-only image for the confirmed single-USB SWIVEL CYD. Never flashes."""
 from pathlib import Path
 import subprocess,shutil
 root=Path(__file__).resolve().parent

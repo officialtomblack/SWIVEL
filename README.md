@@ -1,14 +1,14 @@
-# MILLIE
+# SWIVEL
 
 **Read what’s broadcasting around you.**
 
 By **idea grey**.
 
-MILLIE is an Android app for nearby Wi-Fi and Bluetooth signals. See live signal strength, inspect camera-maker and tracker signatures, and find public safety manufacturer matches, including Flock Safety and Axon/TASER. Use the phone on its own, or connect a compatible CYD over USB for additional radio observations.
+SWIVEL is an Android app for nearby Wi-Fi and Bluetooth signals. See live signal strength, inspect camera-maker and tracker signatures, and find public safety manufacturer matches, including Flock Safety and Axon/TASER. Use the phone on its own, or connect a compatible CYD over USB for additional radio observations.
 
-## Download MILLIE
+## Download SWIVEL
 
-**[Download the installable MILLIE APK](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE.apk)**
+**[Download the installable SWIVEL APK](https://github.com/IDEAGREY/MILLIE/releases/latest/download/MILLIE.apk)**
 
 The actual signed file is also available at the repository’s top level: **[MILLIE.apk](MILLIE.apk)**. On its GitHub file page, choose **Download raw file**. You do not need to build the source code.
 
@@ -36,7 +36,7 @@ The app and firmware have different version numbers. **Android 2.0.14 + CYD 2.0.
 
 1. Use an **Android 8.0+** phone with Wi-Fi and Bluetooth, and download **MILLIE.apk** above. No Termux is needed for this version.
 2. Open the APK. If Android asks, allow installation from the browser or file manager you used.
-3. Open **MILLIE**. Grant location and nearby-device/Bluetooth scan permissions, and keep Wi-Fi, Bluetooth, and Android location services on.
+3. Open **SWIVEL**. Grant location and nearby-device/Bluetooth scan permissions, and keep Wi-Fi, Bluetooth, and Android location services on.
 4. Tap **PHONE SCAN** if scanning has not started. Tap any signal for its details.
 
 The app uses an offline IEEE registry for manufacturer lookups. Phone Wi-Fi scan frequency and cached results are controlled by Android. Bluetooth scanning and Wi-Fi requests run independently; adding a CYD does not turn phone scanning off.
@@ -49,7 +49,7 @@ The CYD is optional. It can also scan and display its radar and scrolling logs w
 
 1. Check the [hardware and firmware guide](docs/millie2-cyd.md) before flashing. The download is an **app-partition image**, not a universal full-flash image.
 2. Connect the supported CYD to an Android USB host/OTG port with a **data cable**.
-3. Open MILLIE, tap **CYD LINK** if needed, and accept Android’s USB permission prompt.
+3. Open SWIVEL, tap **CYD LINK** if needed, and accept Android’s USB permission prompt.
 4. Leave phone scanning on. **PHONE + CYD** indicates both are active. Shared Wi-Fi/BLE addresses merge into one record while retaining each receiver’s observations.
 
 The CYD adds **2.4 GHz Wi-Fi management/data frame observations**, aggregated Wi-Fi control-frame counts, and **BLE advertisements**. Its Wi-Fi and BLE reception share one ESP32 radio. The Android app owns all manufacturer, camera, tracker, and public safety classification; the firmware sends raw observations. The CYD display needs **no touch input**.
@@ -66,6 +66,6 @@ The app’s scan processing and USB recovery were tested on a Moto G Play 2024 w
 
 ## Project history
 
-MILLIE’s GitHub repository was created on **July 15, 2026**, and its original July releases are preserved as historical records. See the [dated project history](docs/project-history.md) for links to the original commit and releases. The current Android 2.0.14 / CYD 2.0.4 downloads are newer; those versions are not being presented as the July builds.
+SWIVEL’s GitHub repository was created on **July 15, 2026**, and its original July releases are preserved as historical records. See the [dated project history](docs/project-history.md) for links to the original commit and releases. The current Android 2.0.14 / CYD 2.0.4 downloads are newer; those versions are not being presented as the July builds.
 
 Older APKs, the superseded root CYD sketch/flasher, and the insecure Termux/Flask installer (`setup_millie.sh`) have been removed from the current repository files. Historical source remains in Git history. The current product is the standalone Android app under `millie2/android/`; a CYD over USB is an optional add-on.

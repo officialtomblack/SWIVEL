@@ -1,4 +1,4 @@
-# MILLIE 2.0.13: parallel scans and deduplication
+# SWIVEL 2.0.13: parallel scans and deduplication
 
 Installed and tested on the Moto G Play 2024 with the CYD connected through USB and debugging over Wi-Fi.
 
@@ -20,6 +20,6 @@ The connected-CYD integration test also passed: real phone BLE and CYD observati
 
 One live snapshot during the test showed 29 phone Wi-Fi observations, 185 phone BLE observations, 33 CYD Wi-Fi observations, and 10 CYD BLE observations. The combined list held 64 unique records, including 18 records shared between receivers. These are observation and record counts from that snapshot, not a count of physical devices or confirmed cameras. The USB test completed after 257 received JSON lines and exactly two opens, including the deliberate recovery test.
 
-Android controls Wi-Fi scan frequency and may return cached results. MILLIE keeps requesting scans and uses new result timestamps rather than pretending an unchanged cache is a new measurement. See [Android Wi-Fi scanning](https://developer.android.com/develop/connectivity/wifi/wifi-scan).
+Android controls Wi-Fi scan frequency and may return cached results. SWIVEL keeps requesting scans and uses new result timestamps rather than pretending an unchanged cache is a new measurement. See [Android Wi-Fi scanning](https://developer.android.com/develop/connectivity/wifi/wifi-scan).
 
 The tests establish concurrent operation while the app is running. They do not establish unrestricted background Wi-Fi scanning beyond Android's limits.
