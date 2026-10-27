@@ -49,7 +49,7 @@ It is **receive-only**. It never transmits, never phones home, and never asks yo
 
 ## Install
 
-**Build it yourself** (works today, see below), or grab a signed build from the [Releases page](https://github.com/officialtomblack/MILLIEBLK/releases) once published. An F-Droid listing is planned.
+**Build it yourself** (works today, see below), or grab a signed build from the [Releases page](https://github.com/officialtomblack/SWIVEL/releases). An F-Droid listing is planned.
 
 1. Install the APK (enable "install unknown apps" for your browser/file manager if prompted).
 2. Open **SWIVEL** and grant **Location** and **Nearby devices / Bluetooth**. Keep Wi-Fi, Bluetooth, and location services on.
