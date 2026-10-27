@@ -5,8 +5,10 @@ import java.util.*;
 
 /** Follow detection modelled on AirGuard: a device is "following" if the same
  *  BLE identity is seen at >= DISTINCT_PLACES distinct locations over >= MIN_SPAN_MS.
- *  MAC randomization is handled by keying the track on a stable service-data payload
- *  where available rather than the rotating address. */
+ *  Keyed on a stable service-data payload where one exists, else the MAC. LIMITATION:
+ *  trackers that rotate BOTH their MAC and payload (Apple Find My / AirTag in separated
+ *  mode) get a fresh key each rotation, so the follow alert never accumulates enough
+ *  places to fire on them — they still appear as trackers, just without the follow alert. */
 final class FollowDetector {
     static final int DISTINCT_PLACES=3; static final long MIN_SPAN_MS=30*60*1000L;
     static final double PLACE_METERS=80; static final long PLACE_EXPIRY_MS=6*60*60*1000L;

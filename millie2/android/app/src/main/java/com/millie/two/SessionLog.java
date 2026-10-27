@@ -27,7 +27,14 @@ final class SessionLog {
     synchronized int size(){return entries.size();}
     synchronized void clear(){entries.clear();lastLogged.clear();}
 
-    static String csvEscape(String s){if(s==null)return "";String v=s.replace("\"","\"\"");return "\""+v+"\"";}
+    static String csvEscape(String s){
+        if(s==null)return "";
+        String v=s;
+        // neutralize spreadsheet formula injection: an attacker-controlled device name like =HYPERLINK(...) would run on open
+        if(!v.isEmpty()){char c=v.charAt(0);if(c=='='||c=='+'||c=='-'||c=='@'||c=='\t'||c=='\r')v="'"+v;}
+        v=v.replace("\"","\"\"");
+        return "\""+v+"\"";
+    }
 
     synchronized String toCsv(){
         StringBuilder b=new StringBuilder("timestamp_iso,epoch_ms,kind,mac,vendor,classification,name,rssi,lat,lon\n");
@@ -62,5 +69,13 @@ final class SessionLog {
         try(Writer w=new OutputStreamWriter(new FileOutputStream(csv))){w.write(toCsv());}
         try(Writer w=new OutputStreamWriter(new FileOutputStream(kml))){w.write(toKml());}
         return new String[]{csv.getAbsolutePath(),kml.getAbsolutePath()};
+    }
+
+    /** Duress wipe: delete every exported CSV/KML left in the files dir, so a cleared
+     *  session leaves no GPS trail on disk. */
+    static void wipeExports(Context ctx){
+        File dir=ctx.getExternalFilesDir(null);if(dir==null)dir=ctx.getFilesDir();
+        File[] files=dir==null?null:dir.listFiles((d,n)->n.startsWith("millie_")&&(n.endsWith(".csv")||n.endsWith(".kml")));
+        if(files!=null)for(File f:files)f.delete();
     }
 }
