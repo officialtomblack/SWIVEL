@@ -31,6 +31,20 @@ final class PublicSafetyMatcher {
         if(!dock&&!controller)return match;
         return new Match(match.brand,match.basis,match.evidence+" · advertised name/SSID "+name,false,true);
     }
+    static Match flockBle(String manufacturers,String services,String name){
+        String n=name==null?"":name.trim();
+        if(n.matches("(?i)Penguin-\\d{10}"))return new Match("FLOCK SAFETY","BLE NAME","strong · BLE advertised name "+n+" · Flock (flock-you dump)",true);
+        if(n.equalsIgnoreCase("FS Ext Battery"))return new Match("FLOCK SAFETY","BLE NAME","strong · BLE advertised name "+n+" · Flock external battery",true);
+        for(String block:manufacturerBlocks(manufacturers)){
+            if(block.length()<4||block.length()%2!=0||!block.matches("[0-9A-Fa-f]+"))continue;
+            int id=Integer.parseInt(block.substring(0,2),16)|(Integer.parseInt(block.substring(2,4),16)<<8);
+            if(id==0x09C8)return new Match("FLOCK SAFETY","BLE COMPANY","weak · Bluetooth SIG company 0x09C8 · XUNTONG (Flock radio)",true);
+        }
+        if(hasService(services,"e8ccbb38-9532-46a8-9fe5-1814df172e6f"))return new Match("FLOCK SAFETY","BLE SERVICE","strong · GATT service e8ccbb38-9532-46a8-9fe5-1814df172e6f · Flock",true);
+        if(hasService(services,"00001530-1212-efde-1523-785feabcd123"))return new Match("FLOCK SAFETY","BLE SERVICE","weak · Nordic DFU service · firmware update mode",true);
+        for(String svc:(services==null?"":services).split("[,;\\s]+")){String u=uuid(svc);if(u.length()==32&&u.endsWith("00001000800000805f9b34fb")){String s16=u.substring(4,8);if(s16.matches("[0-9a-f]{4}")){int v=Integer.parseInt(s16,16);if(v>=0x3100&&v<=0x3500)return new Match("FLOCK SAFETY","BLE SERVICE","weak · Raven service UUID 0x"+s16.toUpperCase(Locale.ROOT)+" · Flock range",true);}}}
+        return null;
+    }
     static Match ble(String manufacturers,String services){
         for(String block:manufacturerBlocks(manufacturers)){
             if(block.length()<4||block.length()%2!=0||!block.matches("[0-9A-Fa-f]+"))continue;

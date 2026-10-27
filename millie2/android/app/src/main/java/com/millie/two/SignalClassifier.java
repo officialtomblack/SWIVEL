@@ -41,14 +41,23 @@ final class SignalClassifier {
             String svc = safe(services).toLowerCase(Locale.ROOT);
             String n = safe(name).toLowerCase(Locale.ROOT);
             PublicSafetyMatcher.Match radioMatch=PublicSafetyMatcher.named(PublicSafetyMatcher.ble(manufacturer,services),name,identityName);
-            if(safety!=null||radioMatch!=null){PublicSafetyMatcher.Match primary=safety!=null?safety:radioMatch;String detail=primary.evidence;if(safety!=null&&radioMatch!=null)detail+=" · "+radioMatch.evidence;return new Result(primary.label(),detail,primary.dock?false:camera,false,true);}
+            if(radioMatch==null)radioMatch=PublicSafetyMatcher.flockBle(manufacturer,services,name);
+            if(safety!=null||radioMatch!=null){PublicSafetyMatcher.Match primary=safety!=null?safety:radioMatch;String detail=primary.evidence;if(safety!=null&&radioMatch!=null)detail+=" · "+radioMatch.evidence;return new Result(primary.label(),detail,primary.dock?false:(camera||primary.cameraMaker),false,true);}
             boolean findMy=false;for(String block:PublicSafetyMatcher.manufacturerBlocks(data))if(block.startsWith("4C001219")&&block.length()>=58&&block.matches("[0-9A-F]+")&&block.length()%2==0)findMy=true;
             if (findMy)
                 return new Result("APPLE FIND MY · TRACKER", "BLE manufacturer data · Apple Find My signature", camera, true, publicSafety);
             if (PublicSafetyMatcher.hasService(svc,"feec") || PublicSafetyMatcher.hasService(svc,"feed"))
-                return new Result("TILE · TRACKER SERVICE", "BLE service UUID · Tile", camera, true, publicSafety);
+                return new Result("TILE · TRACKER SERVICE", "strong · BLE service UUID · Tile", camera, true, publicSafety);
             if (PublicSafetyMatcher.hasService(svc,"fd5a"))
-                return new Result("SAMSUNG SMARTTAG · TRACKER SERVICE", "BLE service UUID · Samsung SmartTag", camera, true, publicSafety);
+                return new Result("SAMSUNG SMARTTAG · TRACKER SERVICE", "strong · BLE service UUID 0xFD5A · Samsung SmartTag", camera, true, publicSafety);
+            if (PublicSafetyMatcher.hasService(svc,"feaa"))
+                return new Result("GOOGLE FIND MY DEVICE · TRACKER NETWORK", "weak · BLE service UUID 0xFEAA · Google/Eddystone (AirGuard)", camera, true, publicSafety);
+            if (PublicSafetyMatcher.hasService(svc,"fe33"))
+                return new Result("CHIPOLO · TRACKER SERVICE", "strong · BLE service UUID 0xFE33 · Chipolo", camera, true, publicSafety);
+            if (PublicSafetyMatcher.hasService(svc,"fa25"))
+                return new Result("PEBBLEBEE · TRACKER SERVICE", "strong · BLE service UUID 0xFA25 · Pebblebee", camera, true, publicSafety);
+            if (PublicSafetyMatcher.hasService(svc,"fd69"))
+                return new Result("SAMSUNG FIND · TRACKER NETWORK", "weak · BLE service UUID 0xFD69 · Samsung", camera, true, publicSafety);
             if (containsWord(n, "airtag"))
                 return new Result("AIRTAG · ADVERTISED NAME", "BLE advertised name · " + safe(name), camera, true, publicSafety);
             if (containsWord(n, "smarttag"))

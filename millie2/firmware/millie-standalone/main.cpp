@@ -43,6 +43,10 @@ volatile uint32_t controlCounts[16]{};
 volatile int8_t controlRssi[16]{};
 volatile uint8_t controlChannels[16]{};
 uint32_t lastControlReport = 0;
+// 2.5e "under attack": raw management-frame flood counters, sampled before dedup.
+volatile uint32_t deauthCount = 0, disassocCount = 0, probeReqCount = 0;
+volatile int8_t attackRssi = 0; volatile uint8_t attackChannel = 0;
+uint32_t lastAttackReport = 0;
 uint8_t channelLock = 0;
 bool hopEnabled = true, radioWifi = true;
 uint8_t forceMode = 0;
@@ -162,6 +166,12 @@ void startWifi() {
     if (len < 24)
       return;
     uint8_t ft = (f[0] >> 2) & 3, sub = (f[0] >> 4) & 15;
+    if (ft == 0) {
+      if (sub == 12) __atomic_add_fetch(&deauthCount, 1, __ATOMIC_RELAXED);
+      else if (sub == 10) __atomic_add_fetch(&disassocCount, 1, __ATOMIC_RELAXED);
+      else if (sub == 4) __atomic_add_fetch(&probeReqCount, 1, __ATOMIC_RELAXED);
+      if (sub == 12 || sub == 10) { attackRssi = p->rx_ctrl.rssi; attackChannel = p->rx_ctrl.channel; }
+    }
     if (ft != 0 && ft != 2)
       return;
     const uint8_t *mac = f + 10;
@@ -835,6 +845,17 @@ void loop() {
       } else if (count) {
         __atomic_add_fetch(&controlCounts[sub], count, __ATOMIC_RELAXED);
       }
+    }
+  }
+  if (now - lastAttackReport >= 1000 && Serial.availableForWrite() > 160) {
+    lastAttackReport = now;
+    uint32_t de = __atomic_exchange_n(&deauthCount, 0, __ATOMIC_RELAXED);
+    uint32_t di = __atomic_exchange_n(&disassocCount, 0, __ATOMIC_RELAXED);
+    uint32_t pr = __atomic_exchange_n(&probeReqCount, 0, __ATOMIC_RELAXED);
+    if (de || di || pr) {
+      Serial.printf("{\"_millie\":\"attack\",\"deauth\":%lu,\"disassoc\":%lu,\"probe_req\":%lu,\"rssi\":%d,\"ch\":%u}\n",
+                    (unsigned long)de, (unsigned long)di, (unsigned long)pr, attackRssi, attackChannel);
+      txLines++;
     }
   }
   if (senseEnabled && now - senseAt >= 1000) {
