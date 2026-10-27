@@ -67,10 +67,10 @@ final class ThreatRules {
                 if(!ssid.isEmpty()&&!ssid.equals("<unknown ssid>")&&!o.isEmpty()){
                     // 2.3 / 2.5b evil-twin: same SSID on >1 OUI
                     HashSet<String> ouis=ssidOuis.get(ssid);
-                    if(ouis!=null&&ouis.size()>1){suspect=true;if(label==null){label="SUSPECT · EVIL-TWIN";evidence="strong · SSID '"+ssid+"' seen on "+ouis.size()+" vendor prefixes";}}
+                    if(ouis!=null&&ouis.size()>1){suspect=true;if(label==null){label="SUSPECT · EVIL-TWIN";evidence="weak · SSID '"+ssid+"' seen on "+ouis.size()+" vendor prefixes (also a normal ISP-gateway + extender setup)";}}
                     // 2.5a karma/pineapple: one OUI presenting many SSIDs
                     HashSet<String> ssids=ouiSsids.get(o);
-                    if(ssids!=null&&ssids.size()>=4){collector=true;suspect=true;label="COLLECTOR · KARMA/PINEAPPLE";evidence="strong · vendor prefix "+o+" presents "+ssids.size()+" SSIDs";}
+                    if(ssids!=null&&ssids.size()>=6){collector=true;suspect=true;label="COLLECTOR · KARMA/PINEAPPLE";evidence="strong · vendor prefix "+o+" presents "+ssids.size()+" SSIDs";}
                     // 2.5b security downgrade vs baseline
                     SsidBaseline base=baselines.get(ssid);
                     String tier=securityTier(r.raw==null?"":r.raw.optString("capabilities",""));

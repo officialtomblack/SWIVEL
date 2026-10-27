@@ -12,7 +12,7 @@ final class SessionLog {
         Entry(long time,String kind,String mac,String vendor,String classification,String name,int rssi,double lat,double lon){this.time=time;this.kind=kind;this.mac=mac;this.vendor=vendor;this.classification=classification;this.name=name;this.rssi=rssi;this.lat=lat;this.lon=lon;}
         boolean hasLocation(){return !Double.isNaN(lat)&&!Double.isNaN(lon);}
     }
-    final ArrayList<Entry> entries=new ArrayList<>();
+    final ArrayDeque<Entry> entries=new ArrayDeque<>();
     static final int CAP=5000;
     /** De-dupe repeated rows: one entry per mac per DEDUP_MS. */
     static final long DEDUP_MS=30000;
@@ -21,8 +21,9 @@ final class SessionLog {
     synchronized void add(Entry e){
         Long prev=lastLogged.get(e.mac);
         if(prev!=null&&e.time-prev<DEDUP_MS)return;
+        lastLogged.values().removeIf(t->e.time-t>=DEDUP_MS); // past the dedup window the key is dead weight; prune so rotating MACs can't grow the map forever
         lastLogged.put(e.mac,e.time);
-        entries.add(e);while(entries.size()>CAP)entries.remove(0);
+        entries.addLast(e);while(entries.size()>CAP)entries.removeFirst();
     }
     synchronized int size(){return entries.size();}
     synchronized void clear(){entries.clear();lastLogged.clear();}
