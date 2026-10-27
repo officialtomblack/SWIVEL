@@ -68,4 +68,4 @@ The app’s scan processing and USB recovery were tested on a Moto G Play 2024 w
 
 MILLIE’s GitHub repository was created on **July 15, 2026**, and its original July releases are preserved as historical records. See the [dated project history](docs/project-history.md) for links to the original commit and releases. The current Android 2.0.14 / CYD 2.0.4 downloads are newer; those versions are not being presented as the July builds.
 
-Older APKs and the superseded root CYD sketch/flasher have been removed from the current repository files and older installer release assets have been removed. Historical source remains in Git history. Earlier Pi/Termux source and the [archived README](docs/legacy-README.md) are historical references, not current Android installation instructions.
+Older APKs, the superseded root CYD sketch/flasher, and the insecure Termux/Flask installer (`setup_millie.sh`) have been removed from the current repository files. Historical source remains in Git history. The current product is the standalone Android app under `millie2/android/`; a CYD over USB is an optional add-on.
