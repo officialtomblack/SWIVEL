@@ -8,3 +8,5 @@ firmware/firmware/
 *.p12
 *.password
 .DS_Store
+keystore.properties
+**/keystore.properties

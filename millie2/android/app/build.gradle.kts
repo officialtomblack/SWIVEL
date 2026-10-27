@@ -1,4 +1,15 @@
+import java.util.Properties
+
 plugins { id("com.android.application") }
+
+// Release signing is read from millie2/android/keystore.properties (git-ignored, never committed).
+// If that file is absent (fresh clone, CI), release builds are simply unsigned — nothing breaks.
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val hasReleaseKey = keystoreProps.getProperty("storeFile") != null
+
 android {
     namespace = "com.millie.two"
     compileSdk = 35
@@ -14,7 +25,20 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    buildTypes { release { isMinifyEnabled = false } }
+    signingConfigs {
+        if (hasReleaseKey) create("release") {
+            storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+            storePassword = keystoreProps.getProperty("storePassword")
+            keyAlias = keystoreProps.getProperty("keyAlias")
+            keyPassword = keystoreProps.getProperty("keyPassword")
+        }
+    }
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            if (hasReleaseKey) signingConfig = signingConfigs.getByName("release")
+        }
+    }
 }
 dependencies {
     implementation("com.github.mik3y:usb-serial-for-android:3.11.0")
