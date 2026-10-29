@@ -59,6 +59,19 @@ a plain Wi-Fi/BLE device — with a strong/weak evidence line, never a certainty
 - **Vendor lookup** uses the bundled offline IEEE registry (`assets/ieee_mac_registry.csv`),
   longest-prefix-first. Randomized/locally-administered MACs (U/L bit set) are labelled
   `RANDOM / PRIVATE` or `LOCAL / RANDOMIZED` and **never** attributed to a vendor.
+- **`HotspotCorrelator` (§6.4) — Phase 7** — flags an **active iOS Personal Hotspot** from its Apple
+  vendor IE (element 221, OUI `00:17:F2`, vendor type `0x06`), whose 6-byte payload is the device's
+  globally-administered **Bluetooth MAC** (Martin et al. 2017). That BT MAC is a stable identity that
+  survives the hotspot's rotating BSSID, surfaced as `iOS PERSONAL HOTSPOT (active) · BT …`. A U/L-bit
+  gate rejects locally-administered values (which kills the Tetherbug spoofer's constant payload), and
+  the BSSID is cross-checked (WiFi MAC ≈ BT ±1) for strong/weak confidence. Attribution is **"hardware
+  made by Apple" (Spec LOW)** — never an agency or person — and it never overwrites a higher-value
+  public-safety/camera label. A second, **weak-only** path runs a co-presence + RSSI co-movement
+  (Pearson shape + constant-gap proximity) heuristic between a hotspot and an Apple Continuity BLE
+  advert, labelled *timing-only, not identity*; it never raises an alert and never becomes deterministic
+  (iOS Continuity uses rotating random BLE addresses). It is **deliberately not** wired into the §6.5
+  "following me" tracker: an active hotspot is usually the user's own phone, present everywhere they go.
+  `// TODO VERIFY ON DEVICE`: that current iOS still emits the type-6 BT MAC and the exact 221-body framing.
 - A match means "hardware made by company X," not "an agency is present."
 
 ---
@@ -167,9 +180,10 @@ Detections stay on the phone; export and the duress wipe are the only data paths
 
 ---
 
-*Phase status: Phases 1–6 are implemented but **build-verified only** — §3 separated-tracker, the §6
-logging subsystem, §5 vendor table, §6.2/§6.3 Continuity / Fast Pair / Swift Pair, §2 Bluetooth Classic,
-and now §6.5 "new to this location" + §1 Wi-Fi IE evil-twin accuracy. The alert paths, the AirTag
-key-stability timing, the MS-CDP length quirk, and the live IE/RSN parsing against a real capture are
-unverified until tested on a phone (`// TODO VERIFY ON DEVICE`). Remaining: Phase 7 — §6.4 BLE↔Wi-Fi
-hotspot correlation. See `docs/PASSIVE_RESEARCH.md §8`.*
+*Phase status: all seven build-plan phases are implemented but **build-verified only** — §3
+separated-tracker, the §6 logging subsystem, §5 vendor table, §6.2/§6.3 Continuity / Fast Pair / Swift
+Pair, §2 Bluetooth Classic, §6.5 "new to this location" + §1 Wi-Fi IE evil-twin accuracy, and §6.4
+BLE↔Wi-Fi hotspot correlation. The alert paths, the AirTag key-stability timing, the MS-CDP length quirk,
+the live IE/RSN parsing, and the Apple hotspot type-6 BT-MAC / 221-body framing are all unverified until
+tested on a phone (`// TODO VERIFY ON DEVICE`). Nothing remains on the `docs/PASSIVE_RESEARCH.md §8`
+priority list; the §7 no-gos were deliberately not built.*

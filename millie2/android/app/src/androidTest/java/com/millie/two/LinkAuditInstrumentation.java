@@ -104,10 +104,26 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         check(e2.suspect&&e2.threat.contains("DOWNGRADE"),"RSN AKM WPA3->WPA2 flagged as security downgrade");
     }
     MainActivity.Row wifiRow(String ssid,String mac,String ies) throws Exception {MainActivity.Row r=new MainActivity.Row();r.kind="WIFI";r.name=ssid;r.mac=mac;r.raw=new org.json.JSONObject().put("informationElements",ies);return r;}
+    void checkCorrelation() throws Exception {
+        HotspotCorrelator.Identity id=HotspotCorrelator.detect("02:11:22:33:44:56","0:,1:0011,221:0017F206001122334455");
+        check(id!=null&&id.btMac.equals("00:11:22:33:44:55"),"Apple hotspot IE 221/0017F2 type-6 -> BT MAC extracted");
+        check(id.consistency==HotspotCorrelator.Consistency.STRONG,"BSSID lower octets corroborate (±1) -> STRONG");
+        check(HotspotCorrelator.detect("02:11:22:33:44:56","221:0017F206010103010000")==null,"Tetherbug constant payload (I/G or U/L bit set) rejected, no fake identity");
+        check(HotspotCorrelator.detect("02:11:22:33:44:56","")==null,"No information elements (e.g. CYD frame) -> not a hotspot");
+        check(HotspotCorrelator.detect("02:11:22:33:44:56","221:00163306001122334455")==null,"Non-Apple vendor IE ignored");
+        check(HotspotCorrelator.consecutiveMac("00:11:22:33:44:60","00:11:22:33:44:61")!=null,"Consecutive factory MACs -> same-hardware link");
+        check(HotspotCorrelator.consecutiveMac("02:11:22:33:44:60","00:11:22:33:44:61")==null,"Locally-administered MAC refused (hard rule)");
+        java.util.List<long[]> w=java.util.Arrays.asList(new long[]{1000,-70},new long[]{6000,-60},new long[]{11000,-50});
+        java.util.List<long[]> b=java.util.Arrays.asList(new long[]{1500,-80},new long[]{6500,-70},new long[]{11500,-60});
+        HotspotCorrelator.Link co=HotspotCorrelator.coPresence(w,b,1000,1500,12000,true);
+        check(co!=null&&!co.strong&&co.label.contains("[LOW]"),"Lockstep RSSI co-movement -> weak LOW link, never strong");
+        java.util.List<long[]> bAnti=java.util.Arrays.asList(new long[]{1500,-60},new long[]{6500,-70},new long[]{11500,-80});
+        check(HotspotCorrelator.coPresence(w,bAnti,1000,1500,12000,true)==null,"Anti-correlated RSSI -> no co-presence link");
+    }
     long[] scanState(MainActivity a){long[] state=new long[9];runOnMainSync(()->{state[0]=a.phoneActive?1:0;state[1]=a.phoneBleActive?1:0;state[2]=a.phoneWifiAccepted;state[3]=a.phoneBleAccepted;state[4]=a.cydWifiAccepted;state[5]=a.cydBleAccepted;state[6]=a.wifiScanRequests;for(MainActivity.Row row:a.snapshot())if(row.observations.sources.size()>1)state[7]++;state[8]=a.gotAlive?1:0;});return state;}
     void checkConcurrentScan(MainActivity a)throws Exception{long[] before=scanState(a);long end=SystemClock.elapsedRealtime()+45000;while(SystemClock.elapsedRealtime()<end){Thread.sleep(1000);long[] current=scanState(a);if(current[3]>before[3]&&current[4]+current[5]>before[4]+before[5]&&current[6]>before[6])break;}long[] after=scanState(a);check(after[0]==1&&after[1]==1&&after[8]==1,"Phone BLE scanner and CYD both active");check(after[3]>before[3],"Real phone BLE observations continue while CYD attached");check(after[4]+after[5]>before[4]+before[5],"Real CYD observations continue alongside phone");check(after[6]>before[6],"Android WiFi scan timer continues alongside CYD");check(after[2]>0,"Phone WiFi results are present");concurrent=new long[]{after[2]-before[2],after[3]-before[3],after[4]+after[5]-before[4]-before[5],after[7]};}
     @Override public void onStart(){Bundle result=new Bundle();ServiceConnection connection=null;try{
-        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();checkClassic();checkLocation();checkEvilTwinIE();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: public-safety, dual-source merge, separated-tracker, vendor-table, continuity, classic, location, and evil-twin-IE checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
+        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();checkClassic();checkLocation();checkEvilTwinIE();checkCorrelation();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: public-safety, dual-source merge, separated-tracker, vendor-table, continuity, classic, location, and evil-twin-IE checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
         Activity first=startActivitySync(screen());CountDownLatch bound=new CountDownLatch(1);
         connection=new ServiceConnection(){public void onServiceConnected(ComponentName n,IBinder binder){link=((CydLinkService.LocalBinder)binder).service();bound.countDown();}public void onServiceDisconnected(ComponentName n){}};
         getTargetContext().bindService(new Intent(getTargetContext(),CydLinkService.class),connection,Context.BIND_AUTO_CREATE);check(bound.await(10,TimeUnit.SECONDS),"Service binds");long[] initial=awaitLive(1,0);checkConcurrentScan((MainActivity)first);initial=snapshot();
