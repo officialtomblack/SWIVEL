@@ -12,7 +12,7 @@ final class ObservationState {
     }
     final LinkedHashMap<String,Sample> sources=new LinkedHashMap<>();
     long firstSeen,lastSeen;int count,rssi;
-    double lastLat=Double.NaN,lastLon=Double.NaN; long lastFixAt;
+    double lastLat=Double.NaN,lastLon=Double.NaN; long lastFixAt; double lastAccuracy=-1;
     boolean hasLocation(){return !Double.isNaN(lastLat)&&!Double.isNaN(lastLon);}
     static String address(String input){String hex=input==null?"":input.replace(":","").replace("-","").trim().toUpperCase(Locale.ROOT);if(!hex.matches("[0-9A-F]{12}"))return "";StringBuilder out=new StringBuilder();for(int i=0;i<12;i+=2){if(i>0)out.append(':');out.append(hex,i,i+2);}return out.toString();}
     Sample accept(JSONObject data,long now)throws JSONException {
@@ -29,7 +29,7 @@ final class ObservationState {
         sample.data=merge(sample.data,data);sample.id=id;sample.order=order;sample.session=session;sample.observedAt=observed;sample.rssi=data.optInt("rssi",sample.rssi);sample.count++;count++;
         if(firstSeen==0||observed<firstSeen)firstSeen=observed;
         if(observed>=lastSeen){lastSeen=observed;rssi=sample.rssi;}
-        if(data.has("_lat")&&data.has("_lon")){lastLat=data.optDouble("_lat",lastLat);lastLon=data.optDouble("_lon",lastLon);lastFixAt=data.optLong("_fixAt",observed);}
+        if(data.has("_lat")&&data.has("_lon")){lastLat=data.optDouble("_lat",lastLat);lastLon=data.optDouble("_lon",lastLon);lastFixAt=data.optLong("_fixAt",observed);lastAccuracy=data.optDouble("_acc",lastAccuracy);}
         return sample;
     }
     String sourceLabel(){return sources.containsKey("PHONE")?(sources.containsKey("CYD")?"PHONE + CYD":"PHONE"):"CYD";}

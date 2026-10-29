@@ -146,15 +146,33 @@ can't see these frames on its own.
 
 ## 6. Logging and export
 
-**What:** Persistently log **every** device seen (not just flagged) and export the record.
+**What:** Capture **every observation** — every AP, BLE and Classic advert, including
+randomized-address devices and every SSID — to disk as it arrives. Capture everything by default,
+filter later.
 
-**How — `DetectionLog` (SQLite):** each device is written to a SQLite table, one row per device
-(`kind|mac`): every captured field as a JSON blob, plus GPS and derived aggregates — first/last
-seen, sighting count, and RSSI min/max/mean/variance (Welford). Writes run on a background thread,
-throttled to one upsert per device per 20 s. **EXPORT CSV · KML · JSON** writes all three to the app
-files dir and opens a share sheet; the KML maps where each device was seen. **DURESS · CLEAR ALL**
-clears the table and deletes the export files. The table persists across restarts and is bounded
-only by clear/duress (a storage cap is a TODO).
+**How — `SessionLog` (append-only NDJSON):** each observation is appended as one JSON object per line
+to a per-session file, `filesDir/logs/session_<id>.ndjson`, on a background writer thread and flushed
+per scan batch — so a background-app kill (routine on the A12) loses at most the in-flight burst, not
+the session. No per-device collapse, no throttle, no row cap (the previous SQLite log kept one upsert
+row per device with a 20 s throttle, which dropped per-observation history and rapid re-sightings).
+Each row carries: `iso_time`, `session_id`, `source`, `kind` (WIFI/BLE/CLASSIC), `mac`, `address_type`,
+`vendor` (**only** for a non-randomized address — never attributed to a random/local MAC), `classification`,
+`evidence`, `ssid_or_name`, `rssi`, `frequency`/`channel`, `security`, raw BLE `manufacturer` data (hex
+by company id), `services`, `service_data`, and `lat`/`lon`/`gps_accuracy_m` when a fix is available. A
+write error (e.g. a full disk) sets a `failed` flag and freezes the counter rather than silently
+dropping — the writer thread never dies and recovers when the error clears.
+
+**Capture toggle:** **CAPTURE · LOG EVERYTHING** (default on) ⇄ **FLAGGED ONLY** on the MORE page,
+persisted in prefs; flagged-only keeps just devices carrying a threat/classification flag.
+
+**Export & duress:** **EXPORT CSV · KML · JSON** is generated *from* the persisted file, streamed one
+line at a time (no whole-file buffering, so a multi-MB capture doesn't OOM), and opens a share sheet;
+the KML maps every located observation. **DURESS · CLEAR ALL** stops the writer, deletes the on-disk
+session NDJSON file(s) **and** every export, then starts a fresh session; an export racing the wipe
+writes nothing. The log lives in internal app-private storage and holds GPS in many rows, so the repo
+`.gitignore` excludes `logs/`, `*.ndjson`, `*.db` and the export patterns. flush() is not fsync():
+data survives a process kill, not a sudden power loss. *shortcut:* one file per launch, bounded only by
+duress — add an age/size cap if device storage matters.
 
 ---
 

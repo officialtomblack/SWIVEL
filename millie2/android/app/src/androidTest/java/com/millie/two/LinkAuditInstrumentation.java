@@ -120,10 +120,41 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         java.util.List<long[]> bAnti=java.util.Arrays.asList(new long[]{1500,-60},new long[]{6500,-70},new long[]{11500,-80});
         check(HotspotCorrelator.coPresence(w,bAnti,1000,1500,12000,true)==null,"Anti-correlated RSSI -> no co-presence link");
     }
+    void checkObservation() throws Exception {
+        MainActivity a=new MainActivity();
+        MainActivity.Row bleRnd=new MainActivity.Row();bleRnd.kind="BLE ";bleRnd.mac="7A:11:22:33:44:55";bleRnd.vendor="RANDOM / PRIVATE";bleRnd.raw=new org.json.JSONObject();
+        org.json.JSONObject o1=a.buildObservation(bleRnd);
+        check(o1!=null&&o1.optString("address_type").startsWith("random")&&o1.optString("vendor","x").isEmpty(),"Randomized BLE address -> address_type set, NO vendor (hard rule)");
+        MainActivity.Row bleNrpa=new MainActivity.Row();bleNrpa.kind="BLE ";bleNrpa.mac="3C:11:22:33:44:55";bleNrpa.vendor="SomeVendor";bleNrpa.raw=new org.json.JSONObject();
+        org.json.JSONObject o3=a.buildObservation(bleNrpa);
+        check(o3.optString("address_type").equals("random_nrpa")&&o3.optString("vendor","x").isEmpty(),"NRPA (top bits 00, 0x02 clear) -> random_nrpa, NO vendor even with a non-random vendor label");
+        MainActivity.Row wifiPub=new MainActivity.Row();wifiPub.kind="WIFI";wifiPub.mac="00:11:22:33:44:55";wifiPub.vendor="Cisco";wifiPub.raw=new org.json.JSONObject().put("capabilities","WPA2").put("frequencyMHz",2412);
+        org.json.JSONObject o2=a.buildObservation(wifiPub);
+        check(o2.optString("address_type").equals("public")&&o2.optString("vendor").equals("Cisco"),"Public WiFi BSSID -> vendor retained");
+        check(o2.optString("security").equals("WPA2")&&o2.optInt("frequency")==2412,"WiFi security + frequency captured");
+        MainActivity.Row wifiLaa=new MainActivity.Row();wifiLaa.kind="WIFI";wifiLaa.mac="02:11:22:33:44:55";wifiLaa.vendor="LOCAL / RANDOMIZED";wifiLaa.raw=new org.json.JSONObject();
+        check(a.buildObservation(wifiLaa).optString("vendor","x").isEmpty(),"Locally-administered WiFi BSSID -> NO vendor (hard rule)");
+        MainActivity.Row btc=new MainActivity.Row();btc.kind="BTC ";btc.mac="00:AA:BB:CC:DD:EE";btc.vendor="Sony";btc.raw=new org.json.JSONObject();
+        check(a.buildObservation(btc).optString("kind").equals("CLASSIC"),"Classic kind mapped BTC -> CLASSIC");
+    }
+    void checkSessionLog() throws Exception {
+        SessionLog sl=new SessionLog(getTargetContext(),true);
+        sl.record(new org.json.JSONObject().put("mac","A").put("kind","WIFI"),true);
+        sl.record(new org.json.JSONObject().put("mac","B").put("kind","BLE"),false);   // log-everything on -> kept
+        sl.logEverything=false;
+        sl.record(new org.json.JSONObject().put("mac","C").put("kind","BLE"),false);   // flagged-only -> dropped
+        sl.record(new org.json.JSONObject().put("mac","D").put("kind","WIFI"),true);   // flagged -> kept
+        sl.stop();
+        int lines=0; boolean sawC=false;
+        try(java.io.BufferedReader r=new java.io.BufferedReader(new java.io.FileReader(sl.file))){String ln;while((ln=r.readLine())!=null){if(!ln.trim().isEmpty())lines++;if(ln.contains("\"C\""))sawC=true;}}
+        check(lines==3,"NDJSON persisted every captured observation and only those (3 of 4)");
+        check(!sawC,"Flagged-only toggle dropped the unflagged observation");
+        sl.file.delete();
+    }
     long[] scanState(MainActivity a){long[] state=new long[9];runOnMainSync(()->{state[0]=a.phoneActive?1:0;state[1]=a.phoneBleActive?1:0;state[2]=a.phoneWifiAccepted;state[3]=a.phoneBleAccepted;state[4]=a.cydWifiAccepted;state[5]=a.cydBleAccepted;state[6]=a.wifiScanRequests;for(MainActivity.Row row:a.snapshot())if(row.observations.sources.size()>1)state[7]++;state[8]=a.gotAlive?1:0;});return state;}
     void checkConcurrentScan(MainActivity a)throws Exception{long[] before=scanState(a);long end=SystemClock.elapsedRealtime()+45000;while(SystemClock.elapsedRealtime()<end){Thread.sleep(1000);long[] current=scanState(a);if(current[3]>before[3]&&current[4]+current[5]>before[4]+before[5]&&current[6]>before[6])break;}long[] after=scanState(a);check(after[0]==1&&after[1]==1&&after[8]==1,"Phone BLE scanner and CYD both active");check(after[3]>before[3],"Real phone BLE observations continue while CYD attached");check(after[4]+after[5]>before[4]+before[5],"Real CYD observations continue alongside phone");check(after[6]>before[6],"Android WiFi scan timer continues alongside CYD");check(after[2]>0,"Phone WiFi results are present");concurrent=new long[]{after[2]-before[2],after[3]-before[3],after[4]+after[5]-before[4]-before[5],after[7]};}
     @Override public void onStart(){Bundle result=new Bundle();ServiceConnection connection=null;try{
-        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();checkClassic();checkLocation();checkEvilTwinIE();checkCorrelation();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: public-safety, dual-source merge, separated-tracker, vendor-table, continuity, classic, location, and evil-twin-IE checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
+        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();checkClassic();checkLocation();checkEvilTwinIE();checkCorrelation();checkObservation();checkSessionLog();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: public-safety, dual-source merge, separated-tracker, vendor-table, continuity, classic, location, and evil-twin-IE checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
         Activity first=startActivitySync(screen());CountDownLatch bound=new CountDownLatch(1);
         connection=new ServiceConnection(){public void onServiceConnected(ComponentName n,IBinder binder){link=((CydLinkService.LocalBinder)binder).service();bound.countDown();}public void onServiceDisconnected(ComponentName n){}};
         getTargetContext().bindService(new Intent(getTargetContext(),CydLinkService.class),connection,Context.BIND_AUTO_CREATE);check(bound.await(10,TimeUnit.SECONDS),"Service binds");long[] initial=awaitLive(1,0);checkConcurrentScan((MainActivity)first);initial=snapshot();

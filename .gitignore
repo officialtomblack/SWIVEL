@@ -1,0 +1,16 @@
+# On-device capture logs & exports — these carry GPS in many rows and must NEVER enter this public repo.
+# The app writes them to private device storage, not here; this is a second line of defence in case a
+# log is ever copied into the tree for debugging.
+logs/
+exports/
+*.ndjson
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+swivel_*.csv
+swivel_*.kml
+swivel_*.json
+millie_*.csv
+millie_*.kml
+millie_*.json

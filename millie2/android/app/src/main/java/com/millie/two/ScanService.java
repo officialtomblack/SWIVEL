@@ -22,7 +22,7 @@ public final class ScanService extends Service {
     BluetoothLeScanner scanner; ScanCallback callback; boolean scanning; String state="idle";
     PowerManager.WakeLock cpu;
     LocationManager locationManager; LocationListener locationListener;
-    static volatile double lastLat=Double.NaN,lastLon=Double.NaN; static volatile long lastFixAt;
+    static volatile double lastLat=Double.NaN,lastLon=Double.NaN; static volatile long lastFixAt; static volatile float lastAccuracy=-1;
     static boolean hasFix(){return !Double.isNaN(lastLat)&&!Double.isNaN(lastLon);}
     /** 16-bit service UUIDs matched both as advertised service UUIDs and as service-data keys. */
     static final String[] SHORT_UUIDS={"feaa","fe33","fa25","fd5a","fd69","feec","feed","fe6b","fe6c","fc81","fe04","fd8e"};
@@ -91,12 +91,12 @@ public final class ScanService extends Service {
         }catch(SecurityException ignored){}catch(Exception ignored){}
     }
     void stopLocation(){if(locationManager!=null&&locationListener!=null)try{locationManager.removeUpdates(locationListener);}catch(Exception ignored){}}
-    static void noteFix(Location l){lastLat=l.getLatitude();lastLon=l.getLongitude();lastFixAt=System.currentTimeMillis();}
+    static void noteFix(Location l){lastLat=l.getLatitude();lastLon=l.getLongitude();lastFixAt=System.currentTimeMillis();lastAccuracy=l.hasAccuracy()?l.getAccuracy():-1;}
 
     void emit(int type,ScanResult r){
         try{
             JSONObject j=new JSONObject();j.put("t","ble");j.put("_source","PHONE");j.put("mac",r.getDevice().getAddress());j.put("rssi",r.getRssi());j.put("callbackType",type);
-            if(hasFix()){j.put("_lat",lastLat);j.put("_lon",lastLon);j.put("_fixAt",lastFixAt);}
+            if(hasFix()){j.put("_lat",lastLat);j.put("_lon",lastLon);j.put("_fixAt",lastFixAt);if(lastAccuracy>=0)j.put("_acc",lastAccuracy);}
             j.put("_observedAt",System.currentTimeMillis()-Math.max(0,(SystemClock.elapsedRealtimeNanos()-r.getTimestampNanos())/1000000));
             ScanRecord rec=r.getScanRecord();
             if(rec!=null){
