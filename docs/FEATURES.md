@@ -39,6 +39,12 @@ a plain Wi-Fi/BLE device — with a strong/weak evidence line, never a certainty
   vendor names.
 - **`PublicSafetyMatcher`** attributes IEEE vendor and Bluetooth-SIG company/service IDs for
   Axon/TASER, Motorola Solutions, Flock, WatchGuard, Digital Ally.
+- **`VendorTable` (§5)** — a verified table of LE/gov/surveillance-associated vendor prefixes
+  (Axon, Flock, Neology, ELSAG, Skydio, Cellebrite, Motorola Solutions, Sierra Wireless, Cradlepoint,
+  Verkada, Avigilon, Axis…) each with a **High / Medium / Low** specificity weight, matched
+  longest-prefix-first (MA-S→MA-M→MA-L) on a real MAC only. The false-friends (WatchGuard
+  Technologies, Flock Audio, Motorola Mobility) are deliberately absent so they can't mis-match.
+  Every hit carries the "hardware made by X — this does not indicate any agency is present" framing.
 - **Vendor lookup** uses the bundled offline IEEE registry (`assets/ieee_mac_registry.csv`),
   longest-prefix-first. Randomized/locally-administered MACs (U/L bit set) are labelled
   `RANDOM / PRIVATE` or `LOCAL / RANDOMIZED` and **never** attributed to a vendor.
