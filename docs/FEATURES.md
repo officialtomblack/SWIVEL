@@ -97,6 +97,16 @@ for trackers the Phase-1 parser doesn't cover.
 alerts after ≥3 distinct ~80 m places over ≥30 min. Weaker than §3 because rotating identities
 (AirTags) defeat the key; separated-tracker hits are handled by §3 instead.
 
+**"New to this location" — Phase 6 (§6.5), `LocationTracker`:** the GPS-free complement to §3. A
+*place* is the stable set of visible Wi-Fi BSSIDs, matched across scans by set overlap (Jaccard ≥0.5)
+rather than exact equality, so RSSI jitter around the collection threshold doesn't split one spot into
+many false locations. A stable device identifier (a separated-tracker payload id — never its rotating
+MAC) that turns up with you at **≥2 distinct places** is flagged "doesn't belong here — followed you."
+This is the "is something following me that doesn't belong here" primitive, and it works indoors where
+there's no GPS fix. Alerts come through `MainActivity.notifyFollow()`. *Limit (shortcut):* only
+separated-tracker ids feed it so far; Fast Pair model id / AirPods pseudo-id aren't plumbed onto the
+device record yet, and it has no own-device safe-list, so a device of yours will trip it once.
+
 ---
 
 ## 5. Threat heuristics (networks under attack / spoofing)
@@ -104,10 +114,15 @@ alerts after ≥3 distinct ~80 m places over ≥30 min. Weaker than §3 because 
 **What:** Flag suspicious Wi-Fi and BLE environments.
 
 **How — `ThreatRules`:**
-- **Evil-twin** — the same SSID seen on more than one vendor prefix (weak evidence; common
-  carrier/ISP names like `xfinitywifi` legitimately do this).
+- **Evil-twin (§1)** — the same SSID on more than one vendor prefix. Evidence is graded by the Wi-Fi
+  Information Elements (API 30+): if the same-SSID BSSIDs show **different IE fingerprints** (the sorted
+  set of IE `id:length`) the evidence is **strong** — a clone rarely reproduces the real AP's full IE
+  set; if the IE sets are identical it stays **weak** (likely one ISP gateway plus its mesh/extender).
 - **Karma / Pineapple** — one vendor prefix presenting ≥6 SSIDs.
-- **Security downgrade** — an SSID whose security tier drops vs its baseline (WPA3→WPA2→open).
+- **Security downgrade (§1)** — an SSID whose security tier drops vs its baseline (WPA3→WPA2→OWE→open).
+  The tier is read from the **RSN element's AKM suite** (SAE→WPA3, OWE→enhanced-open, others→WPA2), not
+  the loose `capabilities` string, and only the AKM list is read so a GCMP-128 cipher (…08) isn't
+  mistaken for an SAE AKM (…08).
 - **BLE advertisement swarm** — ≥25 new BLE addresses in 60 s (Flipper / Fast-Pair spam).
 
 **Attack detection (needs the CYD):** the ESP32 counts deauth / disassoc / probe-request frames;
@@ -152,7 +167,9 @@ Detections stay on the phone; export and the duress wipe are the only data paths
 
 ---
 
-*Phase status: §3 (separated-tracker) is implemented but build-verified only — the alert path and
-the AirTag key-stability timing are unverified until tested on a phone. Items 2–7 of the build plan
-(logging subsystem, vendor-table hardening, Apple Continuity / Fast Pair, Bluetooth Classic, "new
-to this location", BLE↔Wi-Fi correlation) are not built yet — see `docs/PASSIVE_RESEARCH.md §8`.*
+*Phase status: Phases 1–6 are implemented but **build-verified only** — §3 separated-tracker, the §6
+logging subsystem, §5 vendor table, §6.2/§6.3 Continuity / Fast Pair / Swift Pair, §2 Bluetooth Classic,
+and now §6.5 "new to this location" + §1 Wi-Fi IE evil-twin accuracy. The alert paths, the AirTag
+key-stability timing, the MS-CDP length quirk, and the live IE/RSN parsing against a real capture are
+unverified until tested on a phone (`// TODO VERIFY ON DEVICE`). Remaining: Phase 7 — §6.4 BLE↔Wi-Fi
+hotspot correlation. See `docs/PASSIVE_RESEARCH.md §8`.*

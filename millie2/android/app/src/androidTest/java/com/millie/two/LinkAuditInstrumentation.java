@@ -74,10 +74,40 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         check(ContinuityParser.swiftPair("0600300122").contains("Swift Pair"),"MS Swift Pair device type parsed");
         check(ContinuityParser.apple("4D001234").isEmpty(),"non-Apple manufacturer block ignored");
     }
+    void checkLocation() throws Exception {
+        LocationTracker lt=new LocationTracker();
+        lt.setLocation(java.util.Arrays.asList("aa","bb","cc","dd"));
+        check(lt.observe("tag1","AirTag")==null,"First place: no follow alert yet");
+        check(lt.observe("tag1","AirTag")==null,"Same place again: still no alert");
+        lt.setLocation(java.util.Arrays.asList("ee","ff","gg","hh"));
+        check(lt.observe("tag1","AirTag")!=null,"Same id at a second place -> follow alert");
+        lt.setLocation(java.util.Arrays.asList("aa","bb","cc","xx"));
+        check(lt.current==0,"Overlapping BSSID set resolves to the first place (jitter tolerance)");
+        lt.setLocation(java.util.Arrays.asList("zz"));
+        check(lt.current==-1&&lt.observe("tag2","Tile")==null,"Too few BSSIDs -> no location context, no alert");
+    }
+    void checkEvilTwinIE() throws Exception {
+        java.util.HashMap<String,ThreatRules.SsidBaseline> base=new java.util.HashMap<>();long now=System.currentTimeMillis();
+        MainActivity.Row a=wifiRow("CorpNet","AA:BB:CC:00:00:01","0:,1:0011,48:0100000FAC040100000FAC040100000FAC080000");
+        MainActivity.Row b=wifiRow("CorpNet","11:22:33:00:00:02","0:,1:0011,48:0100000FAC040100000FAC040100000FAC020000,221:00AABB");
+        ThreatRules.evaluate(java.util.Arrays.asList(a,b),base,now);
+        check(a.suspect&&b.suspect,"Same SSID on two vendor prefixes -> evil-twin suspect");
+        check(a.threatEvidence.contains("IE fingerprint")||b.threatEvidence.contains("IE fingerprint"),"Divergent IE fingerprints -> strong evil-twin evidence");
+        MainActivity.Row c=wifiRow("MeshNet","AA:BB:CC:00:00:03","0:,1:0011,48:0100000FAC040100000FAC040100000FAC080000");
+        MainActivity.Row d=wifiRow("MeshNet","11:22:33:00:00:04","0:,1:0011,48:0100000FAC040100000FAC040100000FAC080000");
+        ThreatRules.evaluate(java.util.Arrays.asList(c,d),base,now);
+        check(c.threatEvidence.startsWith("weak"),"Identical IE fingerprints across OUIs -> weak (likely mesh)");
+        MainActivity.Row e3=wifiRow("Casa","AA:BB:CC:00:00:05","48:0100000FAC040100000FAC040100000FAC080000");
+        ThreatRules.evaluate(java.util.Arrays.asList(e3),base,now);
+        MainActivity.Row e2=wifiRow("Casa","AA:BB:CC:00:00:05","48:0100000FAC040100000FAC040100000FAC020000");
+        ThreatRules.evaluate(java.util.Arrays.asList(e2),base,now);
+        check(e2.suspect&&e2.threat.contains("DOWNGRADE"),"RSN AKM WPA3->WPA2 flagged as security downgrade");
+    }
+    MainActivity.Row wifiRow(String ssid,String mac,String ies) throws Exception {MainActivity.Row r=new MainActivity.Row();r.kind="WIFI";r.name=ssid;r.mac=mac;r.raw=new org.json.JSONObject().put("informationElements",ies);return r;}
     long[] scanState(MainActivity a){long[] state=new long[9];runOnMainSync(()->{state[0]=a.phoneActive?1:0;state[1]=a.phoneBleActive?1:0;state[2]=a.phoneWifiAccepted;state[3]=a.phoneBleAccepted;state[4]=a.cydWifiAccepted;state[5]=a.cydBleAccepted;state[6]=a.wifiScanRequests;for(MainActivity.Row row:a.snapshot())if(row.observations.sources.size()>1)state[7]++;state[8]=a.gotAlive?1:0;});return state;}
     void checkConcurrentScan(MainActivity a)throws Exception{long[] before=scanState(a);long end=SystemClock.elapsedRealtime()+45000;while(SystemClock.elapsedRealtime()<end){Thread.sleep(1000);long[] current=scanState(a);if(current[3]>before[3]&&current[4]+current[5]>before[4]+before[5]&&current[6]>before[6])break;}long[] after=scanState(a);check(after[0]==1&&after[1]==1&&after[8]==1,"Phone BLE scanner and CYD both active");check(after[3]>before[3],"Real phone BLE observations continue while CYD attached");check(after[4]+after[5]>before[4]+before[5],"Real CYD observations continue alongside phone");check(after[6]>before[6],"Android WiFi scan timer continues alongside CYD");check(after[2]>0,"Phone WiFi results are present");concurrent=new long[]{after[2]-before[2],after[3]-before[3],after[4]+after[5]-before[4]-before[5],after[7]};}
     @Override public void onStart(){Bundle result=new Bundle();ServiceConnection connection=null;try{
-        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();checkClassic();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: 5 public-safety, 15 dual-source merge, and separated-tracker parser checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
+        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();checkClassic();checkLocation();checkEvilTwinIE();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: public-safety, dual-source merge, separated-tracker, vendor-table, continuity, classic, location, and evil-twin-IE checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
         Activity first=startActivitySync(screen());CountDownLatch bound=new CountDownLatch(1);
         connection=new ServiceConnection(){public void onServiceConnected(ComponentName n,IBinder binder){link=((CydLinkService.LocalBinder)binder).service();bound.countDown();}public void onServiceDisconnected(ComponentName n){}};
         getTargetContext().bindService(new Intent(getTargetContext(),CydLinkService.class),connection,Context.BIND_AUTO_CREATE);check(bound.await(10,TimeUnit.SECONDS),"Service binds");long[] initial=awaitLive(1,0);checkConcurrentScan((MainActivity)first);initial=snapshot();
