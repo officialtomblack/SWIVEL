@@ -101,14 +101,15 @@ can't see these frames on its own.
 
 ## 6. Logging and export
 
-**What:** Keep a record of flagged detections and export it.
+**What:** Persistently log **every** device seen (not just flagged) and export the record.
 
-**How — `SessionLog`:** every camera / tracker / public-safety / suspect / collector detection is
-logged in memory (timestamp, radio, MAC, vendor, classification, name, RSSI, GPS), deduped one per
-MAC per 30 s, capped at 5 000 (rolling). **EXPORT CSV + KML** writes both to the app's files dir
-and opens a share sheet; the KML is a map of where each flagged device was seen. **DURESS · CLEAR
-ALL** wipes the in-memory session *and deletes the exported files*. Nothing is written to disk
-until you export, and plain/unflagged devices are not logged.
+**How — `DetectionLog` (SQLite):** each device is written to a SQLite table, one row per device
+(`kind|mac`): every captured field as a JSON blob, plus GPS and derived aggregates — first/last
+seen, sighting count, and RSSI min/max/mean/variance (Welford). Writes run on a background thread,
+throttled to one upsert per device per 20 s. **EXPORT CSV · KML · JSON** writes all three to the app
+files dir and opens a share sheet; the KML maps where each device was seen. **DURESS · CLEAR ALL**
+clears the table and deletes the export files. The table persists across restarts and is bounded
+only by clear/duress (a storage cap is a TODO).
 
 ---
 
