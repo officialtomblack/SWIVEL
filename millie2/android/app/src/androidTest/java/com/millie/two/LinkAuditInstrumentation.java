@@ -60,6 +60,13 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         check(VendorTable.lookup("00:04:7D:11:22:33").spec==VendorTable.Spec.MEDIUM,"Motorola Solutions -> MEDIUM");
         check(VendorTable.lookup("DA:11:22:33:44:55")==null,"locally-administered / randomized MAC not attributed");
     }
+    void checkClassic() throws Exception {
+        MainActivity a=new MainActivity();
+        check(a.btMajor(512).equals("Phone"),"Class of Device major 512 -> Phone");
+        check(a.btMajor(1024).equals("Audio/Video"),"Class of Device major 1024 -> Audio/Video");
+        check(a.btMajor(1792).equals("Wearable"),"Class of Device major 1792 -> Wearable");
+        check(a.btType(1).equals("CLASSIC")&&a.btType(3).equals("DUAL"),"BluetoothDevice type decode");
+    }
     void checkContinuity() throws Exception {
         check(ContinuityParser.apple("4C000719112233445566778899AABBCCDDEEFF00112233445566778899").contains("AirPods"),"Apple AirPods continuity type parsed");
         check(ContinuityParser.apple("4C000C05AABBCCDDEE").contains("Handoff"),"Apple Handoff type parsed (presence only)");
@@ -70,7 +77,7 @@ public final class LinkAuditInstrumentation extends Instrumentation {
     long[] scanState(MainActivity a){long[] state=new long[9];runOnMainSync(()->{state[0]=a.phoneActive?1:0;state[1]=a.phoneBleActive?1:0;state[2]=a.phoneWifiAccepted;state[3]=a.phoneBleAccepted;state[4]=a.cydWifiAccepted;state[5]=a.cydBleAccepted;state[6]=a.wifiScanRequests;for(MainActivity.Row row:a.snapshot())if(row.observations.sources.size()>1)state[7]++;state[8]=a.gotAlive?1:0;});return state;}
     void checkConcurrentScan(MainActivity a)throws Exception{long[] before=scanState(a);long end=SystemClock.elapsedRealtime()+45000;while(SystemClock.elapsedRealtime()<end){Thread.sleep(1000);long[] current=scanState(a);if(current[3]>before[3]&&current[4]+current[5]>before[4]+before[5]&&current[6]>before[6])break;}long[] after=scanState(a);check(after[0]==1&&after[1]==1&&after[8]==1,"Phone BLE scanner and CYD both active");check(after[3]>before[3],"Real phone BLE observations continue while CYD attached");check(after[4]+after[5]>before[4]+before[5],"Real CYD observations continue alongside phone");check(after[6]>before[6],"Android WiFi scan timer continues alongside CYD");check(after[2]>0,"Phone WiFi results are present");concurrent=new long[]{after[2]-before[2],after[3]-before[3],after[4]+after[5]-before[4]-before[5],after[7]};}
     @Override public void onStart(){Bundle result=new Bundle();ServiceConnection connection=null;try{
-        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: 5 public-safety, 15 dual-source merge, and separated-tracker parser checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
+        final Throwable[] pipelineError=new Throwable[1];runOnMainSync(()->{try{checkSafetyPipeline();checkMergePipeline();checkSeparatedTracker();checkVendorTable();checkContinuity();checkClassic();}catch(Throwable error){pipelineError[0]=error;}});if(pipelineError[0]!=null)throw new AssertionError("Public-safety pipeline",pipelineError[0]);if(pipelineOnly){result.putString("result","PASS: 5 public-safety, 15 dual-source merge, and separated-tracker parser checks on device; USB hardware tests not requested");finish(Activity.RESULT_OK,result);return;}
         Activity first=startActivitySync(screen());CountDownLatch bound=new CountDownLatch(1);
         connection=new ServiceConnection(){public void onServiceConnected(ComponentName n,IBinder binder){link=((CydLinkService.LocalBinder)binder).service();bound.countDown();}public void onServiceDisconnected(ComponentName n){}};
         getTargetContext().bindService(new Intent(getTargetContext(),CydLinkService.class),connection,Context.BIND_AUTO_CREATE);check(bound.await(10,TimeUnit.SECONDS),"Service binds");long[] initial=awaitLive(1,0);checkConcurrentScan((MainActivity)first);initial=snapshot();

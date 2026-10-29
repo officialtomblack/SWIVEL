@@ -20,6 +20,12 @@ optional CYD (ESP32) sensor over USB.
   (null filter while the screen is on); `ScanService` runs a filtered foreground-service scan so
   tracker/camera signatures keep coming while the screen is off. Reads advertised name, service
   UUIDs, manufacturer data, service data, RSSI, PHY.
+- **Phone Bluetooth Classic** (§2) — `startClassicDiscovery()` loops `BluetoothAdapter.startDiscovery()`
+  (restarts on `ACTION_DISCOVERY_FINISHED`); each `ACTION_FOUND` gives a device with a **real factory
+  BD_ADDR** (so the vendor OUI and the §5 `VendorTable` are reliable, unlike BLE), RSSI, name,
+  **Class of Device** (major class decoded), device type, and cached **SDP service UUIDs**. Note:
+  discovery is an **active ~12 s inquiry** — the phone transmits — so it's the one non-passive
+  feature, and it only finds currently-*discoverable* devices (most phones/headsets aren't).
 - **Optional CYD** — `CydLinkService` owns a USB-serial link to the ESP32, which streams raw
   Wi-Fi management/control frames and BLE adverts the phone can't see (plus deauth/attack counts).
 - **Merge** — `ObservationState` keeps each radio identity's observations from each source
