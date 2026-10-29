@@ -45,6 +45,11 @@ a plain Wi-Fi/BLE device — with a strong/weak evidence line, never a certainty
   longest-prefix-first (MA-S→MA-M→MA-L) on a real MAC only. The false-friends (WatchGuard
   Technologies, Flock Audio, Motorola Mobility) are deliberately absent so they can't mis-match.
   Every hit carries the "hardware made by X — this does not indicate any agency is present" framing.
+- **`ContinuityParser` (§6.2/§6.3)** — reads cleartext device intel from **Apple Continuity**
+  (AirPods, the Nearby-Info activity byte, and Handoff/AirDrop by *presence only* — never decrypted),
+  **Google Fast Pair** (24-bit cleartext Model ID), and **Microsoft Swift Pair** (device class).
+  Surfaced as `DEVICE INTEL · …` on a BLE device. Continuity model/activity maps are reverse-
+  engineered, so decodes stay conservative.
 - **Vendor lookup** uses the bundled offline IEEE registry (`assets/ieee_mac_registry.csv`),
   longest-prefix-first. Randomized/locally-administered MACs (U/L bit set) are labelled
   `RANDOM / PRIVATE` or `LOCAL / RANDOMIZED` and **never** attributed to a vendor.
