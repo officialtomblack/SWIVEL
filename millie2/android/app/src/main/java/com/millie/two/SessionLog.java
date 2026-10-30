@@ -128,7 +128,7 @@ final class SessionLog {
         String lat = (o.has("lat") && !o.isNull("lat")) ? String.valueOf(o.optDouble("lat")) : "";
         String lon = (o.has("lon") && !o.isNull("lon")) ? String.valueOf(o.optDouble("lon")) : "";
         String acc = (o.has("gps_accuracy_m") && !o.isNull("gps_accuracy_m")) ? String.valueOf(o.optDouble("gps_accuracy_m")) : "";
-        return q(o.opt("mac")) + "," + q(o.opt("ssid_or_name")) + "," + q(o.opt("security")) + "," + q(first)
+        return o.optString("mac", "") + "," + q(o.opt("ssid_or_name")) + "," + q(o.opt("security")) + "," + q(first)
                 + "," + o.optInt("channel", 0) + "," + o.optInt("rssi", 0) + "," + lat + "," + lon + ",," + acc + "," + q(type) + "\n";
     }
     static String q(Object v) { if (v == null || v == JSONObject.NULL) return "\"\""; return "\"" + String.valueOf(v).replace("\"", "\"\"") + "\""; }

@@ -165,6 +165,9 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         try(java.io.BufferedReader r=new java.io.BufferedReader(new java.io.FileReader(sl.file))){String ln;while((ln=r.readLine())!=null){if(!ln.trim().isEmpty())lines++;if(ln.contains("\"C\""))sawC=true;}}
         check(lines==3,"NDJSON persisted every captured observation and only those (3 of 4)");
         check(!sawC,"Flagged-only toggle dropped the unflagged observation");
+        org.json.JSONObject wo=new org.json.JSONObject().put("kind","WIFI").put("mac","3C:5A:B4:11:22:33").put("ssid_or_name","Net,comma").put("security","[WPA2]").put("iso_time","2026-10-29T19:34:25-0400").put("channel",36).put("rssi",-50).put("lat",40.0).put("lon",-75.0);
+        String wline=SessionLog.wigle(wo);
+        check(wline.startsWith("3C:5A:B4:11:22:33,")&&wline.contains("\"Net,comma\"")&&wline.trim().endsWith("\"WIFI\""),"WigleCSV row: bare MAC, quoted comma-SSID, WIFI type");
         sl.file.delete();
     }
     long[] scanState(MainActivity a){long[] state=new long[9];runOnMainSync(()->{state[0]=a.phoneActive?1:0;state[1]=a.phoneBleActive?1:0;state[2]=a.phoneWifiAccepted;state[3]=a.phoneBleAccepted;state[4]=a.cydWifiAccepted;state[5]=a.cydBleAccepted;state[6]=a.wifiScanRequests;for(MainActivity.Row row:a.snapshot())if(row.observations.sources.size()>1)state[7]++;state[8]=a.gotAlive?1:0;});return state;}
