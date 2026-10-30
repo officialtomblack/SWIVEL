@@ -146,6 +146,12 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         check(a.buildObservation(wifiLaa).optString("vendor","x").isEmpty(),"Locally-administered WiFi BSSID -> NO vendor (hard rule)");
         MainActivity.Row btc=new MainActivity.Row();btc.kind="BTC ";btc.mac="00:AA:BB:CC:DD:EE";btc.vendor="Sony";btc.raw=new org.json.JSONObject();
         check(a.buildObservation(btc).optString("kind").equals("CLASSIC"),"Classic kind mapped BTC -> CLASSIC");
+        MainActivity.Row wifiIe=new MainActivity.Row();wifiIe.kind="WIFI";wifiIe.mac="00:11:22:33:44:66";wifiIe.vendor="Cisco";wifiIe.raw=new org.json.JSONObject().put("informationElements","0:,221:0017F206").put("channelWidth",2).put("frequencyMHz",5180);
+        org.json.JSONObject oie=a.buildObservation(wifiIe);
+        check(oie.optString("information_elements").contains("221:")&&oie.optInt("channel_width",-1)==2,"Raw Wi-Fi IEs + channel width persisted to the log row (#7)");
+        MainActivity.Row bleTx=new MainActivity.Row();bleTx.kind="BLE ";bleTx.mac="7C:11:22:33:44:55";bleTx.raw=new org.json.JSONObject().put("txPower",-21).put("primaryPhy",1).put("advertisingSid",3);
+        org.json.JSONObject otx=a.buildObservation(bleTx);
+        check(otx.optInt("tx_power",99)==-21&&otx.optInt("primary_phy",-1)==1&&otx.optInt("advertising_sid",-1)==3,"Raw BLE txPower/PHY/SID persisted to the log row (#7)");
     }
     void checkSessionLog() throws Exception {
         SessionLog sl=new SessionLog(getTargetContext(),true);

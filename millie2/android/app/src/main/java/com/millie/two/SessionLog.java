@@ -109,7 +109,9 @@ final class SessionLog {
     // ---- export: streamed FROM the persisted NDJSON file; call on a background thread ----
     static final String[] COLS = {"iso_time", "session_id", "source", "kind", "mac", "address_type", "vendor",
             "classification", "evidence", "threat", "threat_evidence", "ssid_or_name", "rssi", "frequency", "channel", "security",
-            "manufacturer", "services", "service_data", "lat", "lon", "gps_accuracy_m"};
+            "manufacturer", "services", "service_data", "information_elements", "channel_width", "center_freq0", "center_freq1",
+            "wifi_standard", "tx_power", "primary_phy", "secondary_phy", "advertising_sid", "advertise_flags", "data_status",
+            "lat", "lon", "gps_accuracy_m"};
 
     // WigleWifi-1.4 interchange (Kismet imports/exports it; WiGLE reads it). Text fields are RFC4180-quoted so
     // commas inside an SSID can't shift columns; numbers are bare. No formula-injection guard here — this file
