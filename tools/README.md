@@ -20,6 +20,7 @@ to `/sdcard/Android/data/com.millie.civops2/files/` (pull with `adb pull`).
 | command | network | what it does |
 |---|---|---|
 | `enrich <file>` | **none** | Decode OUI vendor (IEEE registry) + BLE company IDs, and audit SWIVEL's own attributions — confirms the hard rule (locally-administered MAC ⇒ no vendor) and flags any disagreement with IEEE. |
+| `enhance <files/dir>` | **none** | **Merge** SWIVEL + Kismet captures from one folder into a single clean dataset: one row per device, **blanks filled** (vendor from OUI, BLE company from the manufacturer id, best SSID/channel/security across sources, RSSI range, first/last seen, position, `sources`), and **unidentifiable random MACs dropped** (keep them with `--keep-noise`). This is the "for me, to use with Kismet and other databases" output. |
 | `kismet-diff <swivel_wigle.csv> <kismet_wigle.csv>` | **none** | Coverage (who saw which BSSIDs) and SSID agreement on shared ones. Kismet exports wiglecsv natively. |
 | `wigle <file> --auth NAME:TOKEN` | **online, opt-in** | Look up each Wi-Fi BSSID in WiGLE → known SSID/location and a public-hotspot flag (catches "Spectrum Mobile" etc. as hotspots, not evil twins). Sends your BSSIDs to wigle.net. |
 | `deflock <file> [--radius 100]` | **online, opt-in** | Pull known ALPR/Flock camera locations near your track (DeFlock data via OpenStreetMap Overpass) and flag points within range. Sends your bounding box out. |
@@ -28,6 +29,8 @@ to `/sdcard/Android/data/com.millie.civops2/files/` (pull with `adb pull`).
 ```bash
 python3 swivel_crosscheck.py selftest
 python3 swivel_crosscheck.py enrich session.ndjson
+# drop every SWIVEL + Kismet file for one outing in a folder, get one merged, de-noised dataset:
+python3 swivel_crosscheck.py enhance ./outing_2026-10-29/      # or: enhance session.ndjson Kismet-xxx.wiglecsv
 python3 swivel_crosscheck.py kismet-diff swivel_xxx_wigle.csv Kismet-xxx.wiglecsv
 WIGLE_AUTH="apiname:token" python3 swivel_crosscheck.py wigle session.ndjson --limit 50
 python3 swivel_crosscheck.py deflock session.ndjson --radius 150

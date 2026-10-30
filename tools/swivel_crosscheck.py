@@ -300,6 +300,129 @@ def cmd_deflock(args):
     print(f"\n{hits} known ALPR camera(s) within {args.radius} m of your track.")
     return 0
 
+# ---- enhance: merge SWIVEL + Kismet, fill blanks, drop noise (offline) ----
+
+def _colon(h): return ":".join(h[i:i+2] for i in range(0, 12, 2))
+def _s(x): return "" if x is None else str(x)
+def _i(x): return "" if x is None else str(int(x))
+def _fill(d, key, val):
+    if val and not d.get(key): d[key] = val
+
+def _is_random(addr_type, h):
+    return (addr_type or "").startswith(("random", "local")) or local_admin(h)
+
+def _addr_type(kind, h):
+    """Fallback address_type when a source (e.g. Kismet) didn't log one."""
+    if len(h) < 2: return "unknown"
+    b = int(h[:2], 16)
+    if kind == "BLE":
+        return {0: "random_nrpa", 1: "random_rpa", 3: "random_static"}.get((b >> 6) & 3, "public")
+    return "local" if (b & 0x02) else "public"
+
+def _wigle_source(path):
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            return "swivel" if "swivel" in fh.readline().lower() else "kismet"
+    except OSError:
+        return "kismet"
+
+def _iter_inputs(paths):
+    import glob
+    files = []
+    for p in paths:
+        if os.path.isdir(p):
+            for pat in ("*.ndjson", "*.json", "*.csv", "*.wiglecsv"):
+                files += glob.glob(os.path.join(p, pat))
+        else:
+            files.append(p)
+    tagged = []
+    for f in sorted(set(files)):
+        src = "swivel" if f.lower().endswith((".ndjson", ".json")) else _wigle_source(f)
+        tagged.append((f, src))
+    return tagged
+
+def cmd_enhance(args):
+    oui, oui_src = load_oui(args.oui)
+    comp = load_company_ids()
+    inputs = _iter_inputs(args.paths)
+    if not inputs:
+        sys.exit("no inputs found (want .ndjson/.json SWIVEL captures and/or Kismet wiglecsv)")
+    devices, total = {}, 0
+    for path, src in inputs:
+        for r in load_records(path):
+            h = norm_mac(r.get("mac", ""))
+            if len(h) != 12: continue
+            total += 1
+            d = devices.get(h)
+            if d is None:
+                d = devices[h] = {"mac": _colon(h), "sources": set(), "count": 0, "rssi_min": None,
+                                  "rssi_max": None, "first_seen": None, "last_seen": None, "kind": "",
+                                  "name": "", "vendor": "", "security": "", "channel": "", "frequency": "",
+                                  "classification": "", "threat": "", "manufacturer": "", "services": "",
+                                  "address_type": "", "lat": None, "lon": None, "acc": None}
+            d["sources"].add(src); d["count"] += 1
+            for k, v in (("kind", (r.get("kind") or "").strip()), ("name", ssid_of(r).strip()),
+                         ("security", (r.get("security") or "").strip()), ("channel", r.get("channel")),
+                         ("frequency", r.get("frequency")), ("classification", (r.get("classification") or "").strip()),
+                         ("threat", (r.get("threat") or "").strip()), ("manufacturer", (r.get("manufacturer") or "").strip()),
+                         ("services", (r.get("services") or "").strip()), ("address_type", (r.get("address_type") or "").strip())):
+                _fill(d, k, v)
+            if not _is_random(r.get("address_type", ""), h):        # hard rule: never carry a vendor for a random MAC
+                _fill(d, "vendor", (r.get("vendor") or "").strip())
+            rssi = _f(r.get("rssi"))
+            if rssi is not None:
+                d["rssi_min"] = rssi if d["rssi_min"] is None else min(d["rssi_min"], rssi)
+                d["rssi_max"] = rssi if d["rssi_max"] is None else max(d["rssi_max"], rssi)
+            t = r.get("iso_time") or ""
+            if t:
+                d["first_seen"] = t if d["first_seen"] is None else min(d["first_seen"], t)
+                d["last_seen"] = t if d["last_seen"] is None else max(d["last_seen"], t)
+            lat, lon = r.get("lat"), r.get("lon")
+            if isinstance(lat, (int, float)) and isinstance(lon, (int, float)):
+                acc = _f(r.get("gps_accuracy_m"))
+                if d["lat"] is None or (acc is not None and (d["acc"] is None or acc < d["acc"])):
+                    d["lat"], d["lon"], d["acc"] = lat, lon, acc
+    # enrich: fill blank vendor/company + address_type, hard-rule-safe
+    for h, d in devices.items():
+        if not d["address_type"]: d["address_type"] = _addr_type(d["kind"], h)
+        d["manufacturer_company"] = ""
+        if not d["vendor"] and not _is_random(d["address_type"], h):
+            d["vendor"] = oui.get(h[:6], "")
+        if d["kind"] == "BLE" and d["manufacturer"]:
+            cid = ble_company_id(d["manufacturer"])
+            if cid in comp: d["manufacturer_company"] = comp[cid]
+    # clean: drop the "nullshit" — a random MAC with nothing that identifies it
+    kept = [d for d in devices.values()
+            if args.keep_noise or d["name"] or d["vendor"] or d["manufacturer_company"]
+            or d["manufacturer"] or d["services"] or d["classification"]]
+    dropped = len(devices) - len(kept)
+    out_dir = args.out or (os.path.dirname(os.path.abspath(inputs[0][0])) or ".")
+    base = os.path.join(out_dir, "enhanced_" + _stamp())
+    out_csv, n = base + ".csv", 1
+    while os.path.exists(out_csv):                     # don't clobber a run from the same second
+        out_csv, n = f"{base}_{n}.csv", n + 1
+    cols = ["mac", "kind", "address_type", "vendor", "manufacturer_company", "name", "channel", "frequency",
+            "security", "classification", "threat", "rssi_min", "rssi_max", "count", "first_seen", "last_seen",
+            "lat", "lon", "sources"]
+    with open(out_csv, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh); w.writerow(cols)
+        for d in sorted(kept, key=lambda d: (d["kind"], d["mac"])):
+            w.writerow([d["mac"], d["kind"], d["address_type"], d["vendor"], d["manufacturer_company"],
+                        d["name"], _s(d["channel"]), _s(d["frequency"]), d["security"], d["classification"],
+                        d["threat"], _i(d["rssi_min"]), _i(d["rssi_max"]), d["count"], d["first_seen"] or "",
+                        d["last_seen"] or "", _s(d["lat"]), _s(d["lon"]), "+".join(sorted(d["sources"]))])
+    both = sum(1 for d in kept if len(d["sources"]) > 1)
+    filled = sum(1 for d in kept if d["vendor"] or d["manufacturer_company"])
+    print(f"inputs: {len(inputs)} file(s) ({', '.join(src for _, src in inputs)}), {total} observations")
+    print(f"unique devices: {len(devices)}  |  kept: {len(kept)}  |  dropped as noise: {dropped}")
+    print(f"seen by both SWIVEL and Kismet: {both}")
+    print(f"vendor/company resolved: {filled}/{len(kept)}  (OUI db: {oui_src or 'none'})")
+    print(f"\nwrote {out_csv}")
+    return 0
+
+def _stamp():
+    return time.strftime("%Y%m%d_%H%M%S", time.localtime())
+
 # ---- selftest ----
 
 def cmd_selftest(_):
@@ -313,6 +436,10 @@ def cmd_selftest(_):
     assert not _vendor_match("Apple, Inc.", "Sagemcom Broadband SAS")
     assert abs(haversine_m(40.0, -75.0, 40.0, -75.0)) < 1
     assert 10 < haversine_m(40.0000, -75.0, 40.0001, -75.0) < 15   # ~11 m per 0.0001 deg lat
+    assert _addr_type("BLE", "0BDBFC70BFFD") == "random_nrpa" and _addr_type("BLE", "47CB4B08B268") == "random_rpa"
+    assert _addr_type("WIFI", "3C5AB4112233") == "public" and _addr_type("WIFI", "0653D2000001") == "local"
+    assert _is_random("random_rpa", "00112233AABB") and _is_random("", "0653D2000001") and not _is_random("public", "3C5AB4112233")
+    assert _colon("3C5AB4112233") == "3C:5A:B4:11:22:33"
     print("selftest OK")
     return 0
 
@@ -331,6 +458,12 @@ def main():
     p = sub.add_parser("deflock", help="ONLINE opt-in: ALPR cameras near your track (DeFlock/OSM)")
     p.add_argument("file"); p.add_argument("--radius", type=float, default=100.0)
     p.set_defaults(func=cmd_deflock)
+    p = sub.add_parser("enhance", help="offline: merge SWIVEL+Kismet captures, fill blanks, drop noise")
+    p.add_argument("paths", nargs="+", help="capture files and/or a directory holding them")
+    p.add_argument("--oui", help="path to an IEEE oui.txt / manuf file")
+    p.add_argument("--out", help="output directory (default: the first input's directory)")
+    p.add_argument("--keep-noise", action="store_true", help="keep unidentifiable random MACs instead of dropping them")
+    p.set_defaults(func=cmd_enhance)
     sub.add_parser("selftest", help="run built-in asserts").set_defaults(func=cmd_selftest)
     args = ap.parse_args()
     sys.exit(args.func(args) or 0)
