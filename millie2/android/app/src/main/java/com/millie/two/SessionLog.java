@@ -108,19 +108,42 @@ final class SessionLog {
 
     // ---- export: streamed FROM the persisted NDJSON file; call on a background thread ----
     static final String[] COLS = {"iso_time", "session_id", "source", "kind", "mac", "address_type", "vendor",
-            "classification", "evidence", "ssid_or_name", "rssi", "frequency", "channel", "security",
+            "classification", "evidence", "threat", "threat_evidence", "ssid_or_name", "rssi", "frequency", "channel", "security",
             "manufacturer", "services", "service_data", "lat", "lon", "gps_accuracy_m"};
+
+    // WigleWifi-1.4 interchange (Kismet imports/exports it; WiGLE reads it). Text fields are RFC4180-quoted so
+    // commas inside an SSID can't shift columns; numbers are bare. No formula-injection guard here — this file
+    // is parsed by tools, never opened in a spreadsheet, so SSID fidelity matters more than Excel safety.
+    // AltitudeMeters is always blank (the phone API gives us no altitude). Type: WIFI / BLE / BT (Classic).
+    static final String WIGLE_HEADER =
+            "WigleWifi-1.4,appRelease=SWIVEL,model=,release=,device=,display=,board=,brand=\n"
+            + "MAC,SSID,AuthMode,FirstSeen,Channel,RSSI,CurrentLatitude,CurrentLongitude,AltitudeMeters,AccuracyMeters,Type\n";
+    static String wigle(JSONObject o) {
+        String kind = o.optString("kind", "");
+        String type = kind.equals("WIFI") ? "WIFI" : kind.equals("BLE") ? "BLE" : kind.equals("CLASSIC") ? "BT" : kind;
+        String iso = o.optString("iso_time", "");
+        String first = (iso.length() >= 19 ? iso.substring(0, 19) : iso).replace('T', ' ');   // ISO -> "yyyy-MM-dd HH:mm:ss"
+        String lat = (o.has("lat") && !o.isNull("lat")) ? String.valueOf(o.optDouble("lat")) : "";
+        String lon = (o.has("lon") && !o.isNull("lon")) ? String.valueOf(o.optDouble("lon")) : "";
+        String acc = (o.has("gps_accuracy_m") && !o.isNull("gps_accuracy_m")) ? String.valueOf(o.optDouble("gps_accuracy_m")) : "";
+        return q(o.opt("mac")) + "," + q(o.opt("ssid_or_name")) + "," + q(o.opt("security")) + "," + q(first)
+                + "," + o.optInt("channel", 0) + "," + o.optInt("rssi", 0) + "," + lat + "," + lon + ",," + acc + "," + q(type) + "\n";
+    }
+    static String q(Object v) { if (v == null || v == JSONObject.NULL) return "\"\""; return "\"" + String.valueOf(v).replace("\"", "\"\"") + "\""; }
 
     String[] export(Context ctx) throws IOException {
         if (wiped) return null;                          // a duress wipe already happened — never write a fresh GPS export
         File out = ctx.getExternalFilesDir(null); if (out == null) out = ctx.getFilesDir();
         String stamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         File csvF = new File(out, "swivel_" + stamp + ".csv"), kmlF = new File(out, "swivel_" + stamp + ".kml"), jsonF = new File(out, "swivel_" + stamp + ".json");
+        File wigleF = new File(out, "swivel_" + stamp + "_wigle.csv");   // Kismet / WiGLE interchange format
         try (Writer cw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvF)));
              Writer kw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(kmlF)));
-             Writer jw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonF)))) {
+             Writer jw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonF)));
+             Writer ww = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(wigleF)))) {
             for (int i = 0; i < COLS.length; i++) { if (i > 0) cw.write(","); cw.write(COLS[i]); }
             cw.write("\n");
+            ww.write(WIGLE_HEADER);
             kw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><name>SWIVEL log</name>\n");
             jw.write("[");
             boolean firstJson = true;
@@ -133,6 +156,7 @@ final class SessionLog {
                         try { o = new JSONObject(line); } catch (Exception bad) { continue; }   // skip a torn last line
                         for (int i = 0; i < COLS.length; i++) { if (i > 0) cw.write(","); cw.write(csv(o.opt(COLS[i]))); }
                         cw.write("\n");
+                        ww.write(wigle(o));
                         if (o.has("lat") && o.has("lon") && !o.isNull("lat") && !o.isNull("lon")) {
                             String nm = o.optString("ssid_or_name", "");
                             String disp = !nm.isEmpty() ? nm : o.optString("vendor", "");
@@ -147,8 +171,8 @@ final class SessionLog {
             }
             kw.write("</Document></kml>\n"); jw.write("]");
         }
-        if (wiped) { csvF.delete(); kmlF.delete(); jsonF.delete(); return null; }   // duress raced the export — destroy the just-written GPS files
-        return new String[]{csvF.getAbsolutePath(), kmlF.getAbsolutePath(), jsonF.getAbsolutePath()};
+        if (wiped) { csvF.delete(); kmlF.delete(); jsonF.delete(); wigleF.delete(); return null; }   // duress raced the export — destroy the just-written GPS files
+        return new String[]{csvF.getAbsolutePath(), kmlF.getAbsolutePath(), jsonF.getAbsolutePath(), wigleF.getAbsolutePath()};
     }
 
     /** Duress: delete the on-disk session NDJSON file(s) AND every exported log file. */
