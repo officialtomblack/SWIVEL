@@ -15,6 +15,11 @@ final class ThreatRules {
 
     static String ssidOf(MainActivity.Row r){return r.name==null?"":r.name.trim();}
     static String ouiOf(MainActivity.Row r){String h=r.mac==null?"":r.mac.replace(":","").toUpperCase(Locale.ROOT);return h.length()>=6?h.substring(0,6):"";}
+    /** A locally-administered BSSID (first-octet bit 0x02) carries NO vendor OUI — it is a randomized or
+     *  multi-BSSID virtual address. It must never count as a "vendor prefix" in the evil-twin heuristic, or
+     *  public/community SSIDs (Spectrum Mobile, xfinity passpoint) and a router's own band BSSIDs read as
+     *  many fake vendors. Mirrors the no-vendor-on-random-MAC rule the logger already enforces. */
+    static boolean localAdmin(String mac){String h=mac==null?"":mac.replace(":","").trim();if(h.length()<2)return false;try{return (Integer.parseInt(h.substring(0,2),16)&2)!=0;}catch(Exception e){return false;}}
 
     /** Coarse security tier from Wi-Fi capabilities string. */
     static String securityTier(String capabilities){
@@ -51,7 +56,7 @@ final class ThreatRules {
         for(MainActivity.Row r:rows){
             if(!r.kind.trim().equals("WIFI"))continue;
             String ssid=ssidOf(r);if(ssid.isEmpty()||ssid.equals("<unknown ssid>"))continue;
-            String o=ouiOf(r);if(o.isEmpty())continue;
+            String o=ouiOf(r);if(o.isEmpty()||localAdmin(r.mac))continue;   // locally-administered: no vendor to attribute, skip
             ssidOuis.computeIfAbsent(ssid,k->new HashSet<>()).add(o);
             ouiSsids.computeIfAbsent(o,k->new HashSet<>()).add(ssid);
             ssidFps.computeIfAbsent(ssid,k->new HashSet<>()).add(ieFingerprint(r));
@@ -64,9 +69,15 @@ final class ThreatRules {
             if(r.kind.trim().equals("WIFI")){
                 String ssid=ssidOf(r);String o=ouiOf(r);
                 if(!ssid.isEmpty()&&!ssid.equals("<unknown ssid>")&&!o.isEmpty()){
-                    // 2.3 / 2.5b evil-twin: same SSID on >1 OUI
+                    // 2.3 / 2.5b evil-twin: same SSID on >1 REAL (globally-administered) vendor prefix.
+                    // Locally-administered BSSIDs are excluded above, so public-hotspot SSIDs and a router's
+                    // own multi-BSSID bands no longer inflate the count. Two real vendors with IDENTICAL IE
+                    // "shapes" are almost always the same hardware model — neighbours on one ISP's default
+                    // SSID — so that is NOT flagged; only differing IE sets raise a WEAK flag that must be
+                    // corroborated by a security downgrade before it means anything.
                     HashSet<String> ouis=ssidOuis.get(ssid);
-                    if(ouis!=null&&ouis.size()>1){suspect=true;HashSet<String> fps=ssidFps.get(ssid);boolean diverge=fps!=null&&fps.size()>1;if(label==null){label="SUSPECT · EVIL-TWIN";evidence=diverge?"strong · SSID '"+ssid+"' on "+ouis.size()+" vendor prefixes with "+fps.size()+" different IE fingerprints — a clone usually can't match the real AP's full IE set":"weak · SSID '"+ssid+"' on "+ouis.size()+" vendor prefixes but identical IE sets (likely one ISP gateway + its extender/mesh)";}}
+                    HashSet<String> fps=ssidFps.get(ssid);
+                    if(ouis!=null&&ouis.size()>1&&fps!=null&&fps.size()>1){suspect=true;if(label==null){label="SUSPECT · EVIL-TWIN";evidence="weak · SSID '"+ssid+"' on "+ouis.size()+" real vendor prefixes with "+fps.size()+" differing IE fingerprints — possible clone, but same-ISP neighbours also differ; trust only with a SECURITY DOWNGRADE";}}
                     // 2.5a karma/pineapple: one OUI presenting many SSIDs
                     HashSet<String> ssids=ouiSsids.get(o);
                     if(ssids!=null&&ssids.size()>=6){collector=true;suspect=true;label="COLLECTOR · KARMA/PINEAPPLE";evidence="strong · vendor prefix "+o+" presents "+ssids.size()+" SSIDs";}
