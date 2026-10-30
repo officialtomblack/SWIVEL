@@ -127,10 +127,14 @@ device record yet, and it has no own-device safe-list, so a device of yours will
 **What:** Flag suspicious Wi-Fi and BLE environments.
 
 **How — `ThreatRules`:**
-- **Evil-twin (§1)** — the same SSID on more than one vendor prefix. Evidence is graded by the Wi-Fi
-  Information Elements (API 30+): if the same-SSID BSSIDs show **different IE fingerprints** (the sorted
-  set of IE `id:length`) the evidence is **strong** — a clone rarely reproduces the real AP's full IE
-  set; if the IE sets are identical it stays **weak** (likely one ISP gateway plus its mesh/extender).
+- **Evil-twin (§1)** — the same SSID on more than one **real (globally-administered)** vendor prefix.
+  **Locally-administered BSSIDs are excluded** (first-octet bit `0x02`): they carry no vendor OUI, so
+  public/community hotspots broadcast with randomized BSSIDs (Spectrum Mobile, xfinity passpoint) and a
+  router's own multi-BSSID bands no longer read as many fake vendors — the same no-vendor-on-random-MAC
+  rule the logger enforces. Even across two real vendors it flags only **weak**, and only when the Wi-Fi
+  IE fingerprints (sorted set of IE `id:length`, API 30+) **differ**: identical IE shapes across vendors
+  are almost always the same hardware model — neighbours on one ISP's default SSID — and are not flagged.
+  A weak evil-twin is meant to be corroborated by a **security downgrade** before it's trusted.
 - **Karma / Pineapple** — one vendor prefix presenting ≥6 SSIDs.
 - **Security downgrade (§1)** — an SSID whose security tier drops vs its baseline (WPA3→WPA2→OWE→open).
   The tier is read from the **RSN element's AKM suite** (SAE→WPA3, OWE→enhanced-open, others→WPA2), not
@@ -157,17 +161,26 @@ the session. No per-device collapse, no throttle, no row cap (the previous SQLit
 row per device with a 20 s throttle, which dropped per-observation history and rapid re-sightings).
 Each row carries: `iso_time`, `session_id`, `source`, `kind` (WIFI/BLE/CLASSIC), `mac`, `address_type`,
 `vendor` (**only** for a non-randomized address — never attributed to a random/local MAC), `classification`,
-`evidence`, `ssid_or_name`, `rssi`, `frequency`/`channel`, `security`, raw BLE `manufacturer` data (hex
-by company id), `services`, `service_data`, and `lat`/`lon`/`gps_accuracy_m` when a fix is available. A
+`evidence`, `threat`/`threat_evidence` (the suspect/collector flag and *why*, so the reason survives into
+the export — previously it was dropped for anything already classified), `ssid_or_name`, `rssi`,
+`frequency`/`channel`, `security`, raw BLE `manufacturer` data (hex by company id), `services`,
+`service_data`, and `lat`/`lon`/`gps_accuracy_m` when a fix is available. A
 write error (e.g. a full disk) sets a `failed` flag and freezes the counter rather than silently
 dropping — the writer thread never dies and recovers when the error clears.
 
 **Capture toggle:** **CAPTURE · LOG EVERYTHING** (default on) ⇄ **FLAGGED ONLY** on the MORE page,
 persisted in prefs; flagged-only keeps just devices carrying a threat/classification flag.
 
-**Export & duress:** **EXPORT CSV · KML · JSON** is generated *from* the persisted file, streamed one
-line at a time (no whole-file buffering, so a multi-MB capture doesn't OOM), and opens a share sheet;
-the KML maps every located observation. **DURESS · CLEAR ALL** stops the writer, deletes the on-disk
+**Scan control:** scanning auto-starts on launch (all three radios — Wi-Fi beacons, BLE adverts, Classic
+inquiry — gated by the OS Location toggle, not a button). The main-screen **PHONE SCAN · ON/OFF** button
+is a real toggle: ON (re)requests permissions and arms every radio; OFF stops all radios and the
+foreground scan service — a "go quiet" control (logging then idles because no observations arrive).
+
+**Export & duress:** **EXPORT CSV · KML · JSON** (plus a **WigleCSV** `swivel_*_wigle.csv`) is generated
+*from* the persisted file, streamed one line at a time (no whole-file buffering, so a multi-MB capture
+doesn't OOM), and opens a share sheet; the KML maps every located observation. The WigleCSV is the
+Kismet/WiGLE interchange format — see `tools/swivel_crosscheck.py` for offline OUI/BLE-company-id
+validation and opt-in WiGLE/DeFlock cross-checks. **DURESS · CLEAR ALL** stops the writer, deletes the on-disk
 session NDJSON file(s) **and** every export, then starts a fresh session; an export racing the wipe
 writes nothing. The log lives in internal app-private storage and holds GPS in many rows, so the repo
 `.gitignore` excludes `logs/`, `*.ndjson`, `*.db` and the export patterns. flush() is not fsync():
