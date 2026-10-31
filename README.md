@@ -171,10 +171,22 @@ Full build notes: [millie2/android/README.md](millie2/android/README.md) · full
 Tested on a **Samsung Galaxy A12 (Android 12)** — these are results from field sessions on that one device, not guarantees for every phone:
 
 - ✔️ The on-device instrumentation suite **passes** — dual-source merge, device classification, the randomized-MAC hard rule, evil-twin logic, Bluetooth↔Wi-Fi correlation, and the persistent-log round-trip.
-- ✔️ **EXPORT** was driven on the real UI and produced a valid **WigleCSV** — 1,478 rows, 0 hard-rule breaks when independently re-audited by the desktop tool.
+- ✔️ **EXPORT** was driven on the real UI and produced a valid **WigleCSV** — most recently 1,091 rows, 0 hard-rule breaks on independent re-audit. `FirstSeen` is written in **UTC** (so it lines up with Kismet), and a **device-type** column (Classic / LE / dual) is now included.
 - ✔️ The **PHONE SCAN** toggle truly stops and resumes the radios (live counters freeze, then climb again).
 - ✔️ **DURESS · CLEAR ALL** wiped every session log *and* every export off the disk, confirmed on the device.
-- ⏳ **Not yet device-verified:** the Android 14/15 location-foreground-service path, screen-off (screen-locked) scanning, and the separated-tracker "following you" alert against a real tag. If you're on Android 14 or 15, treat background scanning as unconfirmed for now.
+- ⏳ **Not yet device-verified:** the Android 14/15 location-foreground-service path, screen-off (screen-locked) scanning, the Android-15 public-address recovery (see below), and the separated-tracker "following you" alert against a real tag. If you're on Android 14 or 15, treat those as unconfirmed for now.
+
+### 🔧 Recent fixes — 2026-10-31
+
+An independent audit of six suspected issues found **three real** (now fixed) and **three non-issues** (listed here for honesty):
+
+- **Microsoft "Swift Pair" label** now checks the CDP scenario byte (`0x03`) instead of labelling *every* Microsoft advertisement — an ordinary Nearby-Share / Phone Link beacon (`0x01`) is no longer mislabelled.
+- **WigleCSV `FirstSeen`** is now written in **UTC** (it was device-local with no zone marker), so SWIVEL exports line up with Kismet's own WigleCSV when the two are merged.
+- **Bluetooth device type** (Classic / LE / dual) is now carried into the exports, not just shown in the app detail view.
+- **Address type (Android 15+):** when the OS can confirm a BLE address is public, SWIVEL uses that to recover a maker — while *still* never naming a randomized address (the hard rule is unchanged).
+- **Location:** the scanner now listens to GPS **and** network providers and keeps the more precise fix, instead of settling for coarse network accuracy.
+
+Not actually bugs (confirmed against the source): the randomized-address "guess" already errs safe (a random address never gets a maker), the logged GPS accuracy was already the real OS value, and the WigleCSV already carried every column.
 
 More detail: [feature map](docs/FEATURES.md) · [parallel scans & dedup](docs/millie2-verification.md) · [public-safety matching & sources](docs/millie2-public-safety.md) · [IEEE registry provenance](millie2/android/app/src/main/assets/IEEE_REGISTRY_SOURCE.txt).
 

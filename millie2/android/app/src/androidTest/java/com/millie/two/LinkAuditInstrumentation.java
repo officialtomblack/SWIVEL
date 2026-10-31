@@ -71,7 +71,8 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         check(ContinuityParser.apple("4C000719112233445566778899AABBCCDDEEFF00112233445566778899").contains("AirPods"),"Apple AirPods continuity type parsed");
         check(ContinuityParser.apple("4C000C05AABBCCDDEE").contains("Handoff"),"Apple Handoff type parsed (presence only)");
         check(ContinuityParser.fastPair("0C1234FFEE").contains("0x0C1234"),"Fast Pair 24-bit model id parsed");
-        check(ContinuityParser.swiftPair("0600300122").contains("Swift Pair"),"MS Swift Pair device type parsed");
+        check(ContinuityParser.swiftPair("06000322").contains("Swift Pair"),"MS Swift Pair (scenario 0x03) parsed");
+        check(ContinuityParser.swiftPair("06000122").isEmpty(),"MS CDP/Nearby (scenario 0x01) NOT labelled Swift Pair");
         check(ContinuityParser.apple("4D001234").isEmpty(),"non-Apple manufacturer block ignored");
     }
     void checkLocation() throws Exception {
@@ -167,7 +168,7 @@ public final class LinkAuditInstrumentation extends Instrumentation {
         check(!sawC,"Flagged-only toggle dropped the unflagged observation");
         org.json.JSONObject wo=new org.json.JSONObject().put("kind","WIFI").put("mac","3C:5A:B4:11:22:33").put("ssid_or_name","Net,comma").put("security","[WPA2]").put("iso_time","2026-10-29T19:34:25-0400").put("channel",36).put("rssi",-50).put("lat",40.0).put("lon",-75.0);
         String wline=SessionLog.wigle(wo);
-        check(wline.startsWith("3C:5A:B4:11:22:33,")&&wline.contains("\"Net,comma\"")&&wline.trim().endsWith("\"WIFI\""),"WigleCSV row: bare MAC, quoted comma-SSID, WIFI type");
+        check(wline.startsWith("3C:5A:B4:11:22:33,")&&wline.contains("\"Net,comma\"")&&wline.contains("\"2026-10-29 23:34:25\"")&&wline.trim().endsWith("\"WIFI\""),"WigleCSV row: bare MAC, quoted comma-SSID, FirstSeen -0400->UTC, WIFI type");
         sl.file.delete();
     }
     long[] scanState(MainActivity a){long[] state=new long[9];runOnMainSync(()->{state[0]=a.phoneActive?1:0;state[1]=a.phoneBleActive?1:0;state[2]=a.phoneWifiAccepted;state[3]=a.phoneBleAccepted;state[4]=a.cydWifiAccepted;state[5]=a.cydBleAccepted;state[6]=a.wifiScanRequests;for(MainActivity.Row row:a.snapshot())if(row.observations.sources.size()>1)state[7]++;state[8]=a.gotAlive?1:0;});return state;}

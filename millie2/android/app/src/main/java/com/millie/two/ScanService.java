@@ -24,6 +24,8 @@ public final class ScanService extends Service {
     LocationManager locationManager; LocationListener locationListener;
     static volatile double lastLat=Double.NaN,lastLon=Double.NaN; static volatile long lastFixAt; static volatile float lastAccuracy=-1;
     static boolean hasFix(){return !Double.isNaN(lastLat)&&!Double.isNaN(lastLon);}
+    /** BluetoothDevice.getAddressType() value -> name (public API since API 35; ADDRESS_TYPE_PUBLIC=0, RANDOM=1, ANONYMOUS=2, else UNKNOWN). */
+    static String addrTypeName(int t){switch(t){case 0:return "public";case 1:return "random";case 2:return "anonymous";default:return "unknown";}}
     /** 16-bit service UUIDs matched both as advertised service UUIDs and as service-data keys. */
     static final String[] SHORT_UUIDS={"feaa","fe33","fa25","fd5a","fd69","feec","feed","fe6b","fe6c","fc81","fe04","fd8e"};
     /** 128-bit service UUIDs (Flock GATT + Nordic DFU). */
@@ -85,17 +87,21 @@ public final class ScanService extends Service {
             Location last=null;for(String p:new String[]{LocationManager.GPS_PROVIDER,LocationManager.NETWORK_PROVIDER,LocationManager.PASSIVE_PROVIDER}){try{Location l=locationManager.getLastKnownLocation(p);if(l!=null&&(last==null||l.getTime()>last.getTime()))last=l;}catch(Exception ignored){}}
             if(last!=null)noteFix(last);
             if(locationListener==null)locationListener=new LocationListener(){public void onLocationChanged(Location l){noteFix(l);}public void onProviderEnabled(String p){}public void onProviderDisabled(String p){}public void onStatusChanged(String p,int s,Bundle e){}};
-            String provider=locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)?LocationManager.NETWORK_PROVIDER:LocationManager.GPS_PROVIDER;
-            locationManager.requestLocationUpdates(provider,60000L,25f,locationListener,Looper.getMainLooper());
+            // Register every enabled provider (GPS + network), each in its own try so a coarse-only grant that rejects GPS still gets network.
+            for(String p:new String[]{LocationManager.GPS_PROVIDER,LocationManager.NETWORK_PROVIDER})
+                try{if(locationManager.isProviderEnabled(p))locationManager.requestLocationUpdates(p,60000L,25f,locationListener,Looper.getMainLooper());}catch(Exception ignored){}
             state=scanning?"filtered scan + location":state;
         }catch(SecurityException ignored){}catch(Exception ignored){}
     }
     void stopLocation(){if(locationManager!=null&&locationListener!=null)try{locationManager.removeUpdates(locationListener);}catch(Exception ignored){}}
-    static void noteFix(Location l){lastLat=l.getLatitude();lastLon=l.getLongitude();lastFixAt=System.currentTimeMillis();lastAccuracy=l.hasAccuracy()?l.getAccuracy():-1;}
+    static void noteFix(Location l){float acc=l.hasAccuracy()?l.getAccuracy():-1;
+        if(hasFix()&&System.currentTimeMillis()-lastFixAt<60000&&lastAccuracy>=0&&acc>lastAccuracy)return;   // within a minute, keep a finer fix over a coarser one (GPS vs network)
+        lastLat=l.getLatitude();lastLon=l.getLongitude();lastFixAt=System.currentTimeMillis();lastAccuracy=acc;}
 
     void emit(int type,ScanResult r){
         try{
             JSONObject j=new JSONObject();j.put("t","ble");j.put("_source","PHONE");j.put("mac",r.getDevice().getAddress());j.put("rssi",r.getRssi());j.put("callbackType",type);
+            if(Build.VERSION.SDK_INT>=35){try{j.put("addrType",addrTypeName(r.getDevice().getAddressType()));}catch(Throwable ignored){}}
             if(hasFix()){j.put("_lat",lastLat);j.put("_lon",lastLon);j.put("_fixAt",lastFixAt);if(lastAccuracy>=0)j.put("_acc",lastAccuracy);}
             j.put("_observedAt",System.currentTimeMillis()-Math.max(0,(SystemClock.elapsedRealtimeNanos()-r.getTimestampNanos())/1000000));
             ScanRecord rec=r.getScanRecord();

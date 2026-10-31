@@ -48,13 +48,14 @@ final class ContinuityParser {
         return "";
     }
 
-    /** Microsoft Swift Pair (company 0x0006, CDP beacon): cleartext device-type byte.
-     *  // TODO VERIFY ON DEVICE: the MS-CDP beacon has a documented internal length inconsistency. */
+    /** Microsoft Swift Pair (company 0x0006, CDP beacon): only scenario byte 0x03 is Swift Pair;
+     *  0x01 is the ordinary MS CDP / Nearby-Share beacon, so gate on it rather than labelling every MS advert. */
     static String swiftPair(String manufacturerHex) {
         for (String b : split(manufacturerHex)) {
             String h = b.toUpperCase(Locale.ROOT);
-            if (h.startsWith("0600") && h.length() >= 8 && h.matches("[0-9A-F]+"))   // company 0x0006, little-endian
-                return "MS Swift Pair · device type 0x" + h.substring(6, 8);
+            if (!h.startsWith("0600") || h.length() < 8 || !h.matches("[0-9A-F]+")) continue;   // company 0x0006, little-endian
+            if (!h.substring(4, 6).equals("03")) continue;   // scenario byte: 0x03 = Swift Pair; 0x01 = MS CDP / Nearby, not Swift Pair
+            return "MS Swift Pair · sub-scenario 0x" + h.substring(6, 8);
         }
         return "";
     }

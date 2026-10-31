@@ -107,7 +107,7 @@ final class SessionLog {
     void stop() { running = false; try { writer.join(3000); } catch (InterruptedException ignored) {} }
 
     // ---- export: streamed FROM the persisted NDJSON file; call on a background thread ----
-    static final String[] COLS = {"iso_time", "session_id", "source", "kind", "mac", "address_type", "vendor",
+    static final String[] COLS = {"iso_time", "session_id", "source", "kind", "device_type", "mac", "address_type", "vendor",
             "classification", "evidence", "threat", "threat_evidence", "ssid_or_name", "rssi", "frequency", "channel", "security",
             "manufacturer", "services", "service_data", "information_elements", "channel_width", "center_freq0", "center_freq1",
             "wifi_standard", "tx_power", "primary_phy", "secondary_phy", "advertising_sid", "advertise_flags", "data_status",
@@ -120,11 +120,19 @@ final class SessionLog {
     static final String WIGLE_HEADER =
             "WigleWifi-1.4,appRelease=SWIVEL,model=,release=,device=,display=,board=,brand=\n"
             + "MAC,SSID,AuthMode,FirstSeen,Channel,RSSI,CurrentLatitude,CurrentLongitude,AltitudeMeters,AccuracyMeters,Type\n";
-    static String wigle(JSONObject o) {
+    static String wigle(JSONObject o) {   // convenience (tests): builds its own formatters; the export loop uses the 3-arg form to avoid per-row allocation
+        java.text.SimpleDateFormat in = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+        java.text.SimpleDateFormat utc = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        utc.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+        return wigle(o, in, utc);
+    }
+    static String wigle(JSONObject o, java.text.SimpleDateFormat isoIn, java.text.SimpleDateFormat wigleUtc) {
         String kind = o.optString("kind", "");
         String type = kind.equals("WIFI") ? "WIFI" : kind.equals("BLE") ? "BLE" : kind.equals("CLASSIC") ? "BT" : kind;
         String iso = o.optString("iso_time", "");
-        String first = (iso.length() >= 19 ? iso.substring(0, 19) : iso).replace('T', ' ');   // ISO -> "yyyy-MM-dd HH:mm:ss"
+        String first;   // Kismet's WigleCSV writes FirstSeen in UTC; iso_time carries the local offset, so convert to an absolute UTC instant
+        try { first = wigleUtc.format(isoIn.parse(iso)); }
+        catch (Exception e) { first = (iso.length() >= 19 ? iso.substring(0, 19) : iso).replace('T', ' '); }   // fallback: strip to "yyyy-MM-dd HH:mm:ss"
         String lat = (o.has("lat") && !o.isNull("lat")) ? String.valueOf(o.optDouble("lat")) : "";
         String lon = (o.has("lon") && !o.isNull("lon")) ? String.valueOf(o.optDouble("lon")) : "";
         String acc = (o.has("gps_accuracy_m") && !o.isNull("gps_accuracy_m")) ? String.valueOf(o.optDouble("gps_accuracy_m")) : "";
@@ -146,6 +154,10 @@ final class SessionLog {
             for (int i = 0; i < COLS.length; i++) { if (i > 0) cw.write(","); cw.write(COLS[i]); }
             cw.write("\n");
             ww.write(WIGLE_HEADER);
+            // Local formatters (not shared statics): export() runs on a background thread per EXPORT tap and SimpleDateFormat is not thread-safe.
+            java.text.SimpleDateFormat wIsoIn = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+            java.text.SimpleDateFormat wUtc = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+            wUtc.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
             kw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><name>SWIVEL log</name>\n");
             jw.write("[");
             boolean firstJson = true;
@@ -158,7 +170,7 @@ final class SessionLog {
                         try { o = new JSONObject(line); } catch (Exception bad) { continue; }   // skip a torn last line
                         for (int i = 0; i < COLS.length; i++) { if (i > 0) cw.write(","); cw.write(csv(o.opt(COLS[i]))); }
                         cw.write("\n");
-                        ww.write(wigle(o));
+                        ww.write(wigle(o, wIsoIn, wUtc));
                         if (o.has("lat") && o.has("lon") && !o.isNull("lat") && !o.isNull("lon")) {
                             String nm = o.optString("ssid_or_name", "");
                             String disp = !nm.isEmpty() ? nm : o.optString("vendor", "");
