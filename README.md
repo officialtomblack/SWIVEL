@@ -185,6 +185,7 @@ An independent audit of six suspected issues found **three real** (now fixed) an
 - **Bluetooth device type** (Classic / LE / dual) is now carried into the exports, not just shown in the app detail view.
 - **Address type (Android 15+):** when the OS can confirm a BLE address is public, SWIVEL uses that to recover a maker — while *still* never naming a randomized address (the hard rule is unchanged).
 - **Location:** the scanner now listens to GPS **and** network providers and keeps the more precise fix, instead of settling for coarse network accuracy.
+- **EXPORT button:** disables itself and shows "Exporting…" while a run is in progress, so a double-tap can't launch two exports writing the same file — which corrupted a large capture's `.json`/`.csv` in testing.
 
 Not actually bugs (confirmed against the source): the randomized-address "guess" already errs safe (a random address never gets a maker), the logged GPS accuracy was already the real OS value, and the WigleCSV already carried every column.
 
