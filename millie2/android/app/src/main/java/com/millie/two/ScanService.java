@@ -113,9 +113,18 @@ public final class ScanService extends Service {
                 ArrayList<String> uuids=new ArrayList<>();if(rec.getServiceUuids()!=null)for(android.os.ParcelUuid u:rec.getServiceUuids())uuids.add(u.toString().replace("-",""));
                 JSONObject serviceData=new JSONObject();for(Map.Entry<android.os.ParcelUuid,byte[]> e:rec.getServiceData().entrySet()){serviceData.put(e.getKey().toString(),hex(e.getValue()));uuids.add(e.getKey().toString().replace("-",""));}
                 j.put("services",String.join(",",uuids));j.put("serviceData",serviceData);
+                int appv=appearance(rec.getBytes());if(appv>0)j.put("appearance",appv);   // GAP Appearance -> enhancer device_class
             }
             final String line=j.toString();main.post(()->{for(Listener l:new ArrayList<>(listeners))l.onScan(line);});
         }catch(Exception ignored){}
     }
     static String hex(byte[] data){StringBuilder b=new StringBuilder();for(byte x:data)b.append(String.format(Locale.US,"%02X",x&255));return b.toString();}
+    /** GAP Appearance (AD type 0x19) from the raw advert as a 2-byte little-endian int, or -1 if the advert carries none.
+     *  ScanRecord has no getter for it below API 33, so walk the length/type/value AD structures directly (works on API 26+). */
+    static int appearance(byte[] adv){
+        if(adv==null)return -1;
+        for(int i=0;i+1<adv.length;){int len=adv[i]&255;if(len==0)break;int type=adv[i+1]&255;
+            if(type==0x19&&len>=3&&i+3<adv.length)return (adv[i+2]&255)|((adv[i+3]&255)<<8);
+            i+=len+1;}
+        return -1;}
 }

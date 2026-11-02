@@ -111,7 +111,7 @@ final class SessionLog {
             "classification", "evidence", "threat", "threat_evidence", "ssid_or_name", "rssi", "frequency", "channel", "security",
             "manufacturer", "services", "service_data", "information_elements", "channel_width", "center_freq0", "center_freq1",
             "wifi_standard", "tx_power", "primary_phy", "secondary_phy", "advertising_sid", "advertise_flags", "data_status",
-            "lat", "lon", "gps_accuracy_m"};
+            "ip", "gateway_ip", "lat", "lon", "gps_accuracy_m"};
 
     // WigleWifi-1.4 interchange (Kismet imports/exports it; WiGLE reads it). Text fields are RFC4180-quoted so
     // commas inside an SSID can't shift columns; numbers are bare. No formula-injection guard here — this file

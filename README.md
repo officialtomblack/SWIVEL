@@ -189,6 +189,17 @@ An independent audit of six suspected issues found **three real** (now fixed) an
 
 Not actually bugs (confirmed against the source): the randomized-address "guess" already errs safe (a random address never gets a maker), the logged GPS accuracy was already the real OS value, and the WigleCSV already carried every column.
 
+### 🆕 New in 2026-11-02 — IP collection & richer device class
+
+SWIVEL's passive radio scan sees MAC addresses and network names; **IP addresses live one layer up**, inside the traffic a scanner isn't part of — so this release adds three ways to capture them, plus more device detail:
+
+- **SWEEP SUBNET (MORE → tools):** a *manual*, one-tap active sweep of the Wi-Fi network your phone is **currently joined to**. It lists the live hosts on that subnet (a fast TCP connect-scan) and, where Android allows it, maps each to its **MAC** by reading the kernel's own neighbour table — no root. Each host is logged as a `SWEEP` record (`ip`, and `mac` when available). It only runs when you tap it, and only against the network you're on — use it on networks you own or are authorized to test.
+  - *MAC availability:* works out of the box on **Android 8–12**. On Android 13–15 the OS blocks the neighbour-table read for a modern-target app, so you'll get the IP list but MAC shows blank unless the app is built at a lower target — the IP sweep itself always works.
+- **Own-network record (`SELF`):** each session now logs the network **your phone** is on — SSID, the AP's BSSID, your phone's own IP, gateway and subnet — so a capture records *where it was taken from*. Your phone's IP is kept on its own record and is never written onto the access point's row.
+- **More device class, offline:** SWIVEL now logs each Bluetooth device's **GAP Appearance** (BLE) and **Class-of-Device** (Classic) when the advert carries it, so the desktop enhancer can name what a device *is* (phone, watch, audio, computer…) without any lookup.
+
+These feed the desktop [log enhancer](tools/README.md), which folds `ip`/`mac` into a device's `observed_ip` column and decodes the class fields. Everything still stays on your phone until you EXPORT; the sweep talks only to the local network, never the cloud.
+
 More detail: [feature map](docs/FEATURES.md) · [parallel scans & dedup](docs/millie2-verification.md) · [public-safety matching & sources](docs/millie2-public-safety.md) · [IEEE registry provenance](millie2/android/app/src/main/assets/IEEE_REGISTRY_SOURCE.txt).
 
 ---
