@@ -54,9 +54,24 @@ SWIVEL turns that on. Open the app and it immediately starts **scanning** the Wi
 | **CAMERAS** | Devices made by known camera brands. |
 | **TRACKERS** | AirTags, Tiles, SmartTags and friends — including a **"this one is following you"** alert. |
 | **PUBLIC SAFETY** | Gear from surveillance and law-enforcement vendors. |
-| **MORE** | Your controls: the capture toggle, the quiet button, EXPORT, and the panic wipe. |
+| **ALERTS** | A running list of everything that set off an **audible alert** — tap any entry for the full detail. |
+| **MORE** | Your controls: the capture toggle, the quiet button, the alert on/off, EXPORT, and the panic wipe. |
 
 **Something got flagged — now what?** Tap it. SWIVEL shows you *exactly why* — the signal history, the raw radio details, and the evidence behind the label. Nothing is hidden, and nothing is dressed up as more certain than it is (see [Evidence, not proof](#-evidence-not-proof)).
+
+### 🔔 Hear it before you see it — alerts for police gear & cameras
+
+SWIVEL can **beep out loud** the moment it hears equipment linked to law-enforcement / surveillance vendors near you, so you don't have to be staring at the screen:
+
+- **Three beeps** = a high-confidence hit: body-camera, in-car-video and ALPR makers (Axon, Flock, WatchGuard Video, Digital Ally, L-3, Utility, ELSAG, Neology, Skydio, Cellebrite).
+- **One beep** = a lower-confidence hit: gear agencies use that's *also* sold widely (Motorola radios, in-car routers like Sierra / Cradlepoint, business CCTV like Verkada / Axis). Expect more false alarms here — a delivery van's router can set it off.
+- Every hit lands on the **ALERTS** tab (newest first); tap it for the signal, the vendor and the evidence.
+- It won't nag: the same device only re-alerts after about **90 seconds**, so one car beside you doesn't beep non-stop — but a *different* vehicle still alerts on its own.
+- Turn it on or off under **MORE → LE / CAMERA ALERTS**. The beep uses your **alarm** volume, so you hear it even on silent.
+
+**Read the label, not your fears.** A match means *a device made by that vendor is nearby* — it is **not** proof that police, any agency, or any person is present (the same routers ride in utility trucks and ambulances). SWIVEL says "probable," never "a cop."
+
+**Why you might not hear a *camera*:** most **fixed** cameras — Flock / ALPR poles, traffic and pole cams — run on solar + cellular and put out **no Wi-Fi or Bluetooth at all**, so a passive scanner simply can't hear them. SWIVEL alerts on gear that *does* transmit — body cams, in-car systems, and the patrol car's own Wi-Fi. (Flagging fixed cameras by map location is planned for a later build.)
 
 ---
 
