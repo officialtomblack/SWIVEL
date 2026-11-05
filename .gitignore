@@ -14,3 +14,6 @@ swivel_*.json
 millie_*.csv
 millie_*.kml
 millie_*.json
+
+# Local-only: user-supplied ALPR/camera coordinates for the location-alert track (privacy: never commit location data)
+millie2/android/app/src/main/assets/alpr_points.csv

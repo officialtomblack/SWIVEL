@@ -88,8 +88,11 @@ public final class ScanService extends Service {
             if(last!=null)noteFix(last);
             if(locationListener==null)locationListener=new LocationListener(){public void onLocationChanged(Location l){noteFix(l);}public void onProviderEnabled(String p){}public void onProviderDisabled(String p){}public void onStatusChanged(String p,int s,Bundle e){}};
             // Register every enabled provider (GPS + network), each in its own try so a coarse-only grant that rejects GPS still gets network.
+            // Phase 3: tighten the cadence (60s/25m -> 8s/10m) while the camera location-alert track is on, so we can warn BEFORE
+            // passing a mapped camera at driving speed. This is the one real battery cost of the location track.
+            boolean locTrack=getSharedPreferences("swivel",MODE_PRIVATE).getBoolean("loc_alerts",true);long minMs=locTrack?8000L:60000L;float minM=locTrack?10f:25f;
             for(String p:new String[]{LocationManager.GPS_PROVIDER,LocationManager.NETWORK_PROVIDER})
-                try{if(locationManager.isProviderEnabled(p))locationManager.requestLocationUpdates(p,60000L,25f,locationListener,Looper.getMainLooper());}catch(Exception ignored){}
+                try{if(locationManager.isProviderEnabled(p))locationManager.requestLocationUpdates(p,minMs,minM,locationListener,Looper.getMainLooper());}catch(Exception ignored){}
             state=scanning?"filtered scan + location":state;
         }catch(SecurityException ignored){}catch(Exception ignored){}
     }
