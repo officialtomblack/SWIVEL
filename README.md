@@ -69,6 +69,7 @@ SWIVEL can **beep out loud** the moment it hears equipment linked to law-enforce
 - It won't nag: the same device only re-alerts after about **90 seconds**, so one car beside you doesn't beep non-stop — but a *different* vehicle still alerts on its own.
 - Turn it on or off under **MORE → LE / CAMERA ALERTS**. The beep uses your **alarm** volume, so you hear it even on silent.
 - **Tune it** under **MORE → ALERT SENSITIVITY**: *Low* (only the high-confidence tier, longest gap between repeats), *Medium* (the default), or *High* (includes the lower-confidence gear and repeats sooner). **Flag** any device from its detail screen (☆ → ★) and the star shows wherever it appears.
+- **Smart promotion:** a dual-use device (a router or radio) that turns up right alongside high-confidence gear — say a Cradlepoint router next to an Axon — gets bumped up to the loud three-beep. The *pair* reads as an equipped vehicle, where either one alone is weaker. It's based on timing, so treat it as a strong hint, not proof.
 
 **Read the label, not your fears.** A match means *a device made by that vendor is nearby* — it is **not** proof that police, any agency, or any person is present (the same routers ride in utility trucks and ambulances). SWIVEL says "probable," never "a cop."
 
