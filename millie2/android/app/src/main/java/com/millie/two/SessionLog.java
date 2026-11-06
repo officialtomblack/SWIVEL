@@ -189,15 +189,20 @@ final class SessionLog {
         return new String[]{csvF.getAbsolutePath(), kmlF.getAbsolutePath(), jsonF.getAbsolutePath(), wigleF.getAbsolutePath()};
     }
 
-    /** Duress: delete the on-disk session NDJSON file(s) AND every exported log file. */
+    /** Duress: delete EVERY file in the log folder AND the export folder — by folder, not by name, so a file type added
+     *  later can't slip past the wipe. Both folders are app-private (only this class writes there). Directories are
+     *  skipped, so the internal-storage fallback never removes logs/ itself. */
     void wipe(Context ctx) {
         wiped = true;
-        File[] logs = dir == null ? null : dir.listFiles((d, n) -> n.startsWith("session_") && n.endsWith(".ndjson"));
-        if (logs != null) for (File f : logs) f.delete();
+        deleteFiles(dir);
         written = 0;
         File out = ctx.getExternalFilesDir(null); if (out == null) out = ctx.getFilesDir();
-        File[] exps = out == null ? null : out.listFiles((d, n) -> (n.startsWith("swivel_") || n.startsWith("millie_")) && (n.endsWith(".csv") || n.endsWith(".kml") || n.endsWith(".json")));
-        if (exps != null) for (File f : exps) f.delete();
+        deleteFiles(out);
+    }
+
+    private static void deleteFiles(File folder) {
+        File[] fs = folder == null ? null : folder.listFiles(File::isFile);
+        if (fs != null) for (File f : fs) f.delete();
     }
 
     static String csv(Object val) {
