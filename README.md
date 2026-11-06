@@ -145,6 +145,14 @@ That honesty *is* the feature. SWIVEL would rather tell you less and be right th
 
 ---
 
+## 👣 See what's been following you — with DEBRIEF
+
+SWIVEL hears it. **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)** tells you what it meant.
+
+Feed DEBRIEF your SWIVEL exports (and Kismet captures, if you have a laptop rig) and it builds **one SQLite database across every outing** — then flags the trackers and gadgets that **kept turning up at more than one of your places.** It also calls out evil-twin hints, Kismet IDS alerts and devices both radios confirmed, and writes a ranked HTML report. Offline, no accounts, and it ships with a synthetic demo you can try in 60 seconds. **→ [github.com/officialtomblack/DEBRIEF](https://github.com/officialtomblack/DEBRIEF)**
+
+---
+
 ## 🖥️ Power-user tools (optional, for a computer)
 
 Already exported a capture? The included desktop helper [`tools/swivel_crosscheck.py`](tools/README.md) checks and enriches it against **free public databases** — offline by default, online only when you explicitly ask:
@@ -155,6 +163,8 @@ Already exported a capture? The included desktop helper [`tools/swivel_crosschec
 - **`wigle` / `deflock`** *(online, opt-in only)* — look up the Wi-Fi networks you saw on WiGLE, and check for known ALPR/Flock cameras near your route. `wigle` sends the Wi-Fi IDs you observed to WiGLE; `deflock` sends a bounding box around your capture (your rough area) to OpenStreetMap. Neither uploads your capture file or your full GPS track.
 
 Full details and commands: **[tools/README.md](tools/README.md)**.
+
+> Want the full pipeline — every outing merged, tracker and "followed" flags, an HTML report? That grew up into **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)**, the successor to `enhance`.
 
 ---
 
@@ -214,9 +224,9 @@ SWIVEL's passive radio scan sees MAC addresses and network names; **IP addresses
 - **SWEEP SUBNET (MORE → tools):** a *manual*, one-tap active sweep of the Wi-Fi network your phone is **currently joined to**. It lists the live hosts on that subnet (a fast TCP connect-scan) and, where Android allows it, maps each to its **MAC** by reading the kernel's own neighbour table — no root. Each host is logged as a `SWEEP` record (`ip`, and `mac` when available). It only runs when you tap it, and only against the network you're on — use it on networks you own or are authorized to test.
   - *MAC availability:* works out of the box on **Android 8–12**. On Android 13–15 the OS blocks the neighbour-table read for a modern-target app, so you'll get the IP list but MAC shows blank unless the app is built at a lower target — the IP sweep itself always works.
 - **Own-network record (`SELF`):** each session now logs the network **your phone** is on — SSID, the AP's BSSID, your phone's own IP, gateway and subnet — so a capture records *where it was taken from*. Your phone's IP is kept on its own record and is never written onto the access point's row.
-- **More device class, offline:** SWIVEL now logs each Bluetooth device's **GAP Appearance** (BLE) and **Class-of-Device** (Classic) when the advert carries it, so the desktop enhancer can name what a device *is* (phone, watch, audio, computer…) without any lookup.
+- **More device class, offline:** SWIVEL now logs each Bluetooth device's **GAP Appearance** (BLE) and **Class-of-Device** (Classic) when the advert carries it, so [DEBRIEF](https://github.com/officialtomblack/DEBRIEF) can name what a device *is* (phone, watch, audio, computer…) without any lookup.
 
-These feed the desktop [log enhancer](tools/README.md), which folds `ip`/`mac` into a device's `observed_ip` column and decodes the class fields. Everything still stays on your phone until you EXPORT; the sweep talks only to the local network, never the cloud.
+These feed **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)**, the desktop companion, which folds `ip`/`mac` into a device's `observed_ip` column and decodes the class fields. Everything still stays on your phone until you EXPORT; the sweep talks only to the local network, never the cloud.
 
 More detail: [feature map](docs/FEATURES.md) · [parallel scans & dedup](docs/millie2-verification.md) · [public-safety matching & sources](docs/millie2-public-safety.md) · [IEEE registry provenance](millie2/android/app/src/main/assets/IEEE_REGISTRY_SOURCE.txt).
 
