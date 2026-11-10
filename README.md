@@ -14,7 +14,7 @@
   <img alt="license" src="https://img.shields.io/badge/license-MIT-55F5A0?style=flat-square">
   <img alt="mode" src="https://img.shields.io/badge/mode-passive%20·%20no%20attacks-4DA6FF?style=flat-square">
   <img alt="accounts" src="https://img.shields.io/badge/accounts-none-4DA6FF?style=flat-square">
-  <img alt="internet" src="https://img.shields.io/badge/app%20internet-never-4DA6FF?style=flat-square">
+  <img alt="cloud" src="https://img.shields.io/badge/cloud-never-4DA6FF?style=flat-square">
   <img alt="offline" src="https://img.shields.io/badge/data-stays%20on%20device-4DA6FF?style=flat-square">
   <img alt="root" src="https://img.shields.io/badge/root-not%20required-55F5A0?style=flat-square">
 </p>
@@ -32,7 +32,7 @@ Every Wi-Fi network, every AirTag, every security camera, every Bluetooth gadget
 SWIVEL turns that on. Open the app and it immediately starts **scanning** the Wi-Fi and Bluetooth signals around you, sorts them into plain categories — **cameras, trackers, surveillance gear, suspicious networks** — and quietly writes down *everything* it hears so you can look back later.
 
 - 🛰️ **Passive — it never attacks.** SWIVEL doesn't deauth, inject, jam, join, or connect to anything. It uses the same ordinary Wi-Fi and Bluetooth scanning your phone already does every day — it just shows you the results and records them. (It sends the normal "discovery" pings any phone sends to find networks and devices, and nothing more.)
-- 🔌 **No internet. Ever.** The app itself makes zero network calls — it has no internet permission at all. It figures out who made a device from a dictionary built right into the app. Nothing you see is ever sent anywhere.
+- 🔌 **No cloud. Ever.** The app never contacts a remote server, and nothing you see is ever sent anywhere — it figures out who made a device from a dictionary built right into the app. (It requests the INTERNET permission only so the optional **SWEEP SUBNET** tool can probe devices on *your own Wi-Fi*; that traffic never leaves your local network.)
 - 🙅 **No account, no signup, no analytics.** Install it, open it, done. There is nothing to log into and nothing phoning home.
 - 📱 **Just a normal phone.** Android 8.0 or newer. No "rooting," no Termux, no technical setup.
 
@@ -83,10 +83,6 @@ SWIVEL can **beep out loud** the moment it hears equipment linked to law-enforce
 ---
 
 ## 🔒 Where your stuff lives — and how to wipe it (plain English)
-
-<p align="center">
-  <img src="docs/assets/story-5-your-data.jpg" alt="Your data, your phone: zero internet calls, zero accounts or analytics, one-tap EXPORT (CSV + KML + JSON + WigleCSV), and a DURESS button that wipes every log and export. SWIVEL hears it; DEBRIEF tells you what it meant." width="440">
-</p>
 
 This is the part that matters, so here it is with no jargon.
 

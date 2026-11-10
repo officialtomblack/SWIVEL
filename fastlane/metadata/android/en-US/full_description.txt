@@ -6,7 +6,7 @@ Hear it before you see it:
 SWIVEL can beep out loud the moment it hears equipment linked to law-enforcement or surveillance vendors nearby, so you don't have to watch the screen. Three beeps mean a high-confidence hit (body-cam, in-car-video and ALPR makers); one beep means lower-confidence dual-use gear (radios, in-car routers, business CCTV). Every hit lands on the ALERTS tab with the vendor and the evidence, and a Low / Medium / High sensitivity dial lets you tune it. A match means a device made by that vendor is nearby - never proof that any person or agency is present.
 
 Private by design:
-* No internet. The app makes no network calls and has no internet permission. Device lookups use a bundled, offline registry.
+* No cloud. The app never contacts a remote server and nothing is ever uploaded - device lookups use a bundled, offline registry. It requests the INTERNET permission only so the optional SWEEP SUBNET tool (you tap it) can probe devices on your own Wi-Fi; that traffic never leaves your local network.
 * No account, no analytics, nothing phoned home.
 * Your data stays on your phone until you choose to export it. A one-tap DURESS wipe erases every log and export from disk.
 
