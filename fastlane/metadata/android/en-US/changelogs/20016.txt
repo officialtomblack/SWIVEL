@@ -1,0 +1,8 @@
+Big roll-up since 2.0.14:
+* New ALERTS tab: proximity alert (with a beep) for nearby cameras and law-enforcement BLE gear, with a Low/Medium/High sensitivity dial.
+* Full-capture logging of every Wi-Fi/Bluetooth observation, with one-tap CSV/KML/JSON/WigleCSV export for Kismet & WiGLE.
+* PHONE SCAN on/off "go quiet" control that stops every radio.
+* Hardened DURESS panic-wipe (wipes logs and exports, blocks backup).
+* Active subnet sweep and richer device fingerprinting (Apple Continuity, Fast/Swift Pair, Bluetooth Classic).
+* More honest evil-twin detection (ignores randomized BSSIDs).
+* Optional desktop companion, DEBRIEF, for merging captures across outings.

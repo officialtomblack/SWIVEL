@@ -1,0 +1,23 @@
+SWIVEL turns an ordinary Android phone into a passive radio scanner. It listens to the Wi-Fi and Bluetooth signals already in the air around you, classifies what it finds, and writes every observation to a crash-proof log on your phone so you can review it later.
+
+It is passive: it never attacks, injects, deauths, or joins a network. It uses the same ordinary Wi-Fi and Bluetooth scanning your phone already does, and just shows you the results and records them.
+
+Hear it before you see it:
+SWIVEL can beep out loud the moment it hears equipment linked to law-enforcement or surveillance vendors nearby, so you don't have to watch the screen. Three beeps mean a high-confidence hit (body-cam, in-car-video and ALPR makers); one beep means lower-confidence dual-use gear (radios, in-car routers, business CCTV). Every hit lands on the ALERTS tab with the vendor and the evidence, and a Low / Medium / High sensitivity dial lets you tune it. A match means a device made by that vendor is nearby - never proof that any person or agency is present.
+
+Private by design:
+* No internet. The app makes no network calls and has no internet permission. Device lookups use a bundled, offline registry.
+* No account, no analytics, nothing phoned home.
+* Your data stays on your phone until you choose to export it. A one-tap DURESS wipe erases every log and export from disk.
+
+What it flags:
+* Cameras - known camera makers (Ring, Wyze, Axis, Hikvision, Dahua, Reolink, Nest, Arlo and more).
+* Trackers - Apple Find My, Tile and Samsung SmartTag signatures, plus a "separated tracker is travelling with you" alert.
+* Public-safety gear - Flock Safety, Axon/TASER, Motorola, WatchGuard and similar, graded High / Medium / Low by how specific the match is.
+* Network threats - evil-twin and karma/pineapple rogue access points, security-downgrade tricks, and Bluetooth advertisement swarms.
+
+Full-capture logging keeps every network and device it hears, with one-tap export to CSV, KML, JSON and WigleCSV for Kismet and WiGLE. The optional desktop companion DEBRIEF merges your exports across outings and flags what keeps turning up at more than one of your places.
+
+Evidence, not proof: a signature identifies hardware made by a company - not a confirmed product, that it is recording, or that any person or agency is present. And a device with a randomized address is never assigned a maker. SWIVEL would rather tell you less and be right.
+
+Requires Android 8.0+. No root, no Termux. An optional ESP32 "CYD" board adds 2.4 GHz Wi-Fi monitoring over USB.
