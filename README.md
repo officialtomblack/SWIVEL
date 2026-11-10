@@ -23,6 +23,10 @@
 
 ## 👁️ What SWIVEL does for you
 
+<p align="center">
+  <img src="docs/assets/story-1-hears.jpg" alt="Your phone hears everything around you — SWIVEL lets you see it. Passive, offline, no root, no signup. Wi-Fi, BLE, trackers, cameras." width="440">
+</p>
+
 Every Wi-Fi network, every AirTag, every security camera, every Bluetooth gadget nearby is **announcing its presence into the air all the time.** Your phone's radios pick up those announcements — it just never shows them to you.
 
 SWIVEL turns that on. Open the app and it immediately starts **scanning** the Wi-Fi and Bluetooth signals around you, sorts them into plain categories — **cameras, trackers, surveillance gear, suspicious networks** — and quietly writes down *everything* it hears so you can look back later.
@@ -34,13 +38,13 @@ SWIVEL turns that on. Open the app and it immediately starts **scanning** the Wi
 
 > You don't need to be a hacker, a programmer, or a security expert — you don't even need to know what a "MAC address" is. If you can install an app and tap a button, you can use SWIVEL.
 
-<p align="center">
-  <img src="docs/assets/screenshot-live.png" alt="SWIVEL live radar screen" width="300">
-</p>
-
 ---
 
 ## 🚀 Quick start (literally 4 steps)
+
+<p align="center">
+  <img src="docs/assets/story-2-radar.jpg" alt="Live radar on a real phone: Wi-Fi blips in amber, Bluetooth in blue, with peak RSSI and a signal-strength distribution. No root." width="440">
+</p>
 
 1. **Install it.** Put the app on your phone (see [Get the app](#-get-the-app) below). If Android warns about "installing unknown apps," allow it for your browser or file manager — that's normal for apps outside the Play Store.
 2. **Open SWIVEL and say yes to two things.** It asks for **Location** and **Nearby devices / Bluetooth**. It needs these to *hear* radios — not to find *you*. (Your location only ever gets written into your own private log, and that log never leaves the phone.)
@@ -80,6 +84,10 @@ SWIVEL can **beep out loud** the moment it hears equipment linked to law-enforce
 
 ## 🔒 Where your stuff lives — and how to wipe it (plain English)
 
+<p align="center">
+  <img src="docs/assets/story-5-your-data.jpg" alt="Your data, your phone: zero internet calls, zero accounts or analytics, one-tap EXPORT (CSV + KML + JSON + WigleCSV), and a DURESS button that wipes every log and export. SWIVEL hears it; DEBRIEF tells you what it meant." width="440">
+</p>
+
 This is the part that matters, so here it is with no jargon.
 
 ### 📍 It all stays on your phone
@@ -109,6 +117,10 @@ Because your log can include **your GPS location** on many of its lines — a re
 
 ## ✨ What it can spot
 
+<p align="center">
+  <img src="docs/assets/story-3-callouts.jpg" alt="What it calls out, sorted into plain categories: CAM cameras, TAG trackers, LE public-safety gear graded High/Med/Low, NET network threats, and LOG for everything else written to disk." width="440">
+</p>
+
 | 🎯 | Category | What SWIVEL flags |
 |---|---|---|
 | 📷 | **Cameras** | Devices made by known camera brands — Ring, Wyze, Axis, Hikvision, Dahua, Reolink, Nest, Arlo and more — matched against a built-in manufacturer registry. Common router/base-station names (Spectrum, TP-Link, Netgear, ASUS, Linksys, Eero, Arlo bases) are filtered out so they don't cry wolf. |
@@ -132,6 +144,10 @@ SWIVEL doesn't just show you blips and forget them. **Every** Wi-Fi access point
 ---
 
 ## 🎖️ Evidence, not proof
+
+<p align="center">
+  <img src="docs/assets/story-4-no-guessing.jpg" alt="Random MAC? No guessing — a scrambled address never gets a fake vendor, ever. Evidence, not proof: it would rather tell you less and be right." width="440">
+</p>
 
 Most "detector" apps overpromise. SWIVEL does the opposite — on purpose — and it's the thing that makes it worth trusting.
 
