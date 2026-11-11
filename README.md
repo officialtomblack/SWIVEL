@@ -190,11 +190,25 @@ Plug it in, tap **CYD LINK**, accept the USB prompt — the status shows **PHONE
 
 ## 📥 Get the app
 
-**Build it yourself** (below), or grab a signed build from the [Releases page](https://github.com/officialtomblack/SWIVEL/releases). An F-Droid listing is planned.
+### ✅ Easiest way — download & install (about 2 minutes, no computer needed)
 
-### 🛠️ Build from source
+Do all of this **on the phone you want to use it on:**
 
-Needs **JDK 17** and the Android SDK (`ANDROID_SDK_ROOT` set, or `local.properties` → `sdk.dir`).
+1. **Open the download page:** **[github.com/officialtomblack/SWIVEL/releases/latest](https://github.com/officialtomblack/SWIVEL/releases/latest)**
+2. Scroll to **Assets** and tap the file that ends in **`.apk`** (e.g. `SWIVEL-2.0.16.apk`, about 1.4 MB). It downloads in a second or two.
+3. **Tap the downloaded file** — pull down the notification shade and tap it, or open your **Files** app and find it under *Downloads*.
+4. Android will say it won't install apps "from this source." **This is normal for any app that isn't from the Play Store — it is not a warning about SWIVEL.** On that prompt tap **Settings**, switch on **Allow from this source** for your browser (Chrome, Firefox…) or your Files app, press **back**, then tap **Install**.
+5. **Open SWIVEL.** Done — now follow [Quick start](#-quick-start-literally-4-steps) at the top.
+
+> **📲 Updating later** — just download the newer `.apk` the same way and install it on top of the old one. Your settings and your saved logs stay put, and you don't need to uninstall first. *(Every release is signed with the same developer key — `CN=SWIVEL` — which is what lets Android update it in place instead of making you wipe and reinstall.)*
+>
+> **🔐 Is sideloading like this safe?** The whole source code is in this repo, the app never contacts a remote server (see the badges at the top), and every build is signed with one fixed key you can check yourself with `apksigner verify --print-certs`. "Unknown apps" is simply Android's label for *anything installed outside the Play Store* — it doesn't mean anything is wrong with the file.
+
+*🤖 A one-tap install through **F-Droid** is in the works — this spot will link it the moment it goes live. Until then, the Releases download above is the way.*
+
+### 🛠️ For developers — build it from source
+
+Prefer to compile it yourself? You'll need **JDK 17** and the Android SDK (`ANDROID_SDK_ROOT` set, or `local.properties` → `sdk.dir`).
 
 ```bash
 cd millie2/android
