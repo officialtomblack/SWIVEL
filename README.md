@@ -157,26 +157,27 @@ That honesty *is* the feature. SWIVEL would rather tell you less and be right th
 
 ---
 
-## 👣 See what's been following you — with DEBRIEF
+## 👣 See what's been following you — add DEBRIEF
 
-SWIVEL hears it. **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)** tells you what it meant.
+SWIVEL hears it. **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)** tells you what it *meant.*
 
-Feed DEBRIEF your SWIVEL exports (and Kismet captures, if you have a laptop rig) and it builds **one SQLite database across every outing** — then flags the trackers and gadgets that **kept turning up at more than one of your places.** It also calls out evil-twin hints, Kismet IDS alerts and devices both radios confirmed, and writes a ranked HTML report. Offline, no accounts, and it ships with a synthetic demo you can try in 60 seconds. **→ [github.com/officialtomblack/DEBRIEF](https://github.com/officialtomblack/DEBRIEF)**
+On its own, SWIVEL gives you a live radar and a complete log. **DEBRIEF turns that log into an answer.** Feed it your SWIVEL exports — and your Kismet captures too, if you run a laptop rig — and it:
+
+- builds **one database across every outing**, so it can flag the trackers and gadgets that **kept turning up at more than one of your places** (your neighbour's router stays put; a tag slipped in your bag doesn't);
+- calls out **evil-twin hotspots**, **Kismet IDS alerts**, and the devices **both radios confirmed**;
+- writes a ranked, click-to-expand report that shows *why* each thing was flagged — offline, no accounts.
+
+Try it on its built-in demo in **60 seconds**, and once you're capturing your own, a one-line starter script turns each outing into a single command. **If you use SWIVEL more than once, DEBRIEF is what makes the captures add up.**
+
+**→ [github.com/officialtomblack/DEBRIEF](https://github.com/officialtomblack/DEBRIEF)**
 
 ---
 
-## 🖥️ Power-user tools (optional, for a computer)
+## 🖥️ Quick on-device checker (optional)
 
-Already exported a capture? The included desktop helper [`tools/swivel_crosscheck.py`](tools/README.md) checks and enriches it against **free public databases** — offline by default, online only when you explicitly ask:
+Want a fast look at a single exported capture without the full pipeline? The bundled **[`tools/swivel_crosscheck.py`](tools/README.md)** fills in device makers, re-audits the randomized-address hard rule, and — opt-in only — looks up Wi-Fi networks on WiGLE or nearby ALPR/Flock cameras via OpenStreetMap, never uploading your capture file or GPS track. Full commands: **[tools/README.md](tools/README.md)**.
 
-- **`enrich`** *(offline)* — fills in device makers from the public registry and **re-audits the hard rule**.
-- **`enhance`** *(offline)* — merges SWIVEL + Kismet captures into one clean dataset, fills blanks, drops unidentifiable noise.
-- **`kismet-diff`** *(offline)* — compares coverage and network-name agreement against a Kismet export.
-- **`wigle` / `deflock`** *(online, opt-in only)* — look up the Wi-Fi networks you saw on WiGLE, and check for known ALPR/Flock cameras near your route. `wigle` sends the Wi-Fi IDs you observed to WiGLE; `deflock` sends a bounding box around your capture (your rough area) to OpenStreetMap. Neither uploads your capture file or your full GPS track.
-
-Full details and commands: **[tools/README.md](tools/README.md)**.
-
-> Want the full pipeline — every outing merged, tracker and "followed" flags, an HTML report? That grew up into **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)**, the successor to `enhance`.
+For everything beyond a quick check — **every outing merged into one history, "followed" flags, the ranked report** — use **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)** above. It's the grown-up successor to this helper, and where the project's work goes now.
 
 ---
 
