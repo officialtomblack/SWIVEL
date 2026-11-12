@@ -205,7 +205,22 @@ Do all of this **on the phone you want to use it on:**
 >
 > **🔐 Is sideloading like this safe?** The whole source code is in this repo, the app never contacts a remote server (see the badges at the top), and every build is signed with one fixed key you can check yourself with `apksigner verify --print-certs`. "Unknown apps" is simply Android's label for *anything installed outside the Play Store* — it doesn't mean anything is wrong with the file.
 
-*🤖 A one-tap install through **F-Droid** is in the works — this spot will link it the moment it goes live. Until then, the Releases download above is the way.*
+### 🔄 Best for auto-updates — install with Obtainium
+
+[**Obtainium**](https://github.com/ImranR98/Obtainium) is a free, open-source installer that watches a project's GitHub releases and **auto-updates the app for you** — so SWIVEL stays current without you ever checking back. It's the closest thing to an app-store experience, with no account and no middleman.
+
+1. Install **Obtainium** itself — it's on [F-Droid](https://f-droid.org/packages/dev.imranr.obtainium.fdroid/) or [GitHub](https://github.com/ImranR98/Obtainium/releases).
+2. **On your phone**, tap the badge below. It opens Obtainium with SWIVEL already filled in — just confirm, and it starts tracking this repo.
+
+<p align="center">
+  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22com.millie.civops2%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fofficialtomblack%2FSWIVEL%22%2C%22author%22%3A%22officialtomblack%22%2C%22name%22%3A%22SWIVEL%22%7D"><img src="docs/assets/badge_obtainium.png" alt="Get it on Obtainium" height="54"></a>
+</p>
+
+> No badge, or you're on a computer? In Obtainium tap **Add App** and paste `https://github.com/officialtomblack/SWIVEL` — exactly the same result.
+
+From then on Obtainium pings you whenever a new SWIVEL release lands and installs it over the top, keeping your logs (same signing key). This is the easiest way to **never miss an update**.
+
+*A classic **F-Droid** catalog listing has been requested too; until then, Obtainium above already gives you the install-and-auto-update experience today, straight from this repo.*
 
 ### 🛠️ For developers — build it from source
 
