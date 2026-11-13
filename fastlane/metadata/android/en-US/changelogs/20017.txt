@@ -1,0 +1,3 @@
+* SWIVEL is now phone-only. The optional CYD (ESP32) companion board and all of its code were removed — nobody was using it, and dropping it makes SWIVEL a clean, dependency-free build.
+* Header version label now reads 2.0.17 (it had been stuck showing 2.0.14).
+* No change to scanning, alerts, logging, CSV/KML/JSON export or the DURESS wipe — same features, lighter app.

@@ -1,6 +1,6 @@
 # SWIVEL 2.0.17
 
-Developer: idea grey. App name: SWIVEL.
+Developer: Tom Black (officialtomblack). App name: SWIVEL. A privacy-focused, security-hardened fork of idea grey's MILLIE — see the top-level README for credits and lineage.
 
 Fresh Android application for SWIVEL CivOps. Package ID: `com.millie.civops2` (separate from earlier SWIVEL apps).
 
@@ -33,7 +33,10 @@ apksigner sign --ks YOUR_RELEASE_KEYSTORE --ks-key-alias YOUR_ALIAS --out MILLIE
 apksigner verify --verbose --print-certs MILLIE.apk
 ```
 
-The downloadable 2.0.14 APK is signed with idea grey’s dedicated release certificate. Its certificate SHA-256 is `7743003929add747a9eba2714b8f8ba955807dd895db7e5283e5808c65950970`. No signing key or password is included. A build signed with a different key cannot update that APK in place.
+Every published SWIVEL release (v2.0.14 onward) is signed with the same dedicated release certificate, `CN=SWIVEL, O=officialtomblack`, SHA-256 `a2b3bea4584175759eca4c03fdbd1770e5dd1a1eca55a24dd630a08942ca6038` (confirm with `apksigner verify --print-certs`). No signing key or password is included. A build signed with a different key cannot update an installed SWIVEL in place.
+
+<!-- Corrected 2026-11-13: an earlier version of this line attributed the 2.0.14 APK to a different certificate (SHA-256 7743003929add747a9eba2714b8f8ba955807dd895db7e5283e5808c65950970). apksigner --print-certs on the published v2.0.14 and v2.0.17 assets confirms both carry the CN=SWIVEL, O=officialtomblack key above. -->
+
 
 ## Network identity
 
