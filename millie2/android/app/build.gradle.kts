@@ -18,8 +18,8 @@ android {
         testInstrumentationRunner = "com.millie.two.LinkAuditInstrumentation"
         minSdk = 26
         targetSdk = 35
-        versionCode = 20016
-        versionName = "2.0.16"
+        versionCode = 20017
+        versionName = "2.0.17"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -41,5 +41,4 @@ android {
     }
 }
 dependencies {
-    implementation("com.github.mik3y:usb-serial-for-android:3.11.0")
 }

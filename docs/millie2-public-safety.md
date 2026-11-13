@@ -1,6 +1,6 @@
 # SWIVEL 2.0.11 public-safety coverage
 
-The interface uses **PUBLIC SAFETY · manufacturer**. Charging docks do not receive a separate category or label. Matching evidence appears in the signal details. Classification lives in the Android app; the CYD supplies observations.
+The interface uses **PUBLIC SAFETY · manufacturer**. Charging docks do not receive a separate category or label. Matching evidence appears in the signal details. Classification lives in the Android app.
 
 ## IEEE assignments
 
@@ -30,7 +30,7 @@ These are recognized when present in captured advertisements:
 
 Company identifiers are decoded from manufacturer-data block boundaries in little-endian order. They are not searched for as arbitrary payload substrings. Services accept short, 0x-prefixed and Bluetooth-base 128-bit UUID forms with exact matching. Phone service-data UUID keys also contribute to this evidence.
 
-Previously captured identifiers are retained for the same signal record when a later phone/CYD advertisement omits them. Different addresses are not linked. Generic names or guessed prefixes do not create public-safety matches.
+Previously captured identifiers are retained for the same signal record when a later advertisement omits them. Different addresses are not linked. Generic names or guessed prefixes do not create public-safety matches.
 
 ## Docks
 
@@ -42,7 +42,7 @@ Axon's newer firmware can rotate Bluetooth addresses. An IEEE-only scan can miss
 
 ## Verification
 
-108 plain-Java checks cover earlier camera/tracker rules, router-name distinctions, public-safety assignments, exclusions, UUID formats, manufacturer-data boundaries and dock handling. Five public-safety pipeline checks also passed on the Moto G Play 2024 on October 17, 2026, covering phone manufacturer-block boundaries, retained identifiers, address separation, CYD short-UUID input and Android service-data UUIDs. These use controlled inputs inside the installed app; they do not establish detection of a real Axon device nearby. The CYD was not detected on USB during this validation, so the full connected-CYD lifecycle test was not repeated. Version 2.0.11 was installed and its package version verified.
+108 plain-Java checks cover earlier camera/tracker rules, router-name distinctions, public-safety assignments, exclusions, UUID formats, manufacturer-data boundaries and dock handling. Five public-safety pipeline checks also passed on the Moto G Play 2024 on October 17, 2026, covering phone manufacturer-block boundaries, retained identifiers, address separation, short-UUID input and Android service-data UUIDs. These use controlled inputs inside the installed app; they do not establish detection of a real Axon device nearby. Version 2.0.11 was installed and its package version verified.
 
 ## Primary sources
 

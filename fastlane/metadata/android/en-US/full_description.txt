@@ -20,4 +20,4 @@ Full-capture logging keeps every network and device it hears, with one-tap expor
 
 Evidence, not proof: a signature identifies hardware made by a company - not a confirmed product, that it is recording, or that any person or agency is present. And a device with a randomized address is never assigned a maker. SWIVEL would rather tell you less and be right.
 
-Requires Android 8.0+. No root, no Termux. An optional ESP32 "CYD" board adds 2.4 GHz Wi-Fi monitoring over USB.
+Requires Android 8.0+. No root, no Termux.

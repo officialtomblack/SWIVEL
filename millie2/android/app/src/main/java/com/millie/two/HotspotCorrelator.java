@@ -44,8 +44,7 @@ final class HotspotCorrelator {
     static final double R_MIN = 0.7, GAP_SD_MAX = 6.0;
 
     /** Deterministic §6.4: the iOS-hotspot BT identity from a WiFi row's IEs, or null. Only the phone's
-     *  API-30+ scan carries IEs — a CYD/ESP32 WiFi frame has none, so it yields no 221 element and
-     *  returns null (no explicit source check needed, and a PHONE+CYD-merged row still works). */
+     *  API-30+ scan carries IEs — a frame with no IEs yields no 221 element and returns null. */
     static Identity detect(String bssid, String informationElements) {
         if (informationElements == null) return null;
         for (String e : informationElements.split(",")) {

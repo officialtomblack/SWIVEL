@@ -1,5 +1,7 @@
 # SWIVEL 2.0.13: parallel scans and deduplication
 
+> **Historical (2026-11-12):** CYD (ESP32) support was removed in app 2.0.17 — SWIVEL is now phone-only. The CYD-specific results below are kept as a record of the 2.0.x dual-source verification.
+
 Installed and tested on the Moto G Play 2024 with the CYD connected through USB and debugging over Wi-Fi.
 
 ## Behavior

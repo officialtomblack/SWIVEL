@@ -19,4 +19,4 @@ Only the current installer pair is offered in the active repository files and re
 
 The older APK release attachments, superseded root APKs, and root CYD sketch/flasher were retired to avoid confusing installations. Old commits and GitHub’s automatically generated historical source archives remain accessible as project history; they are not the recommended app/firmware downloads.
 
-See the [main README](../README.md) for current installation and [CYD hardware requirements](millie2-cyd.md).
+See the [main README](../README.md) for current installation.

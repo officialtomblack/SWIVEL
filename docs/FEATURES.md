@@ -1,15 +1,14 @@
 # SWIVEL — features: what they are and how they work
 
 A map of every capability in the Android app, grouped by feature, with the mechanism and the
-classes that implement it. Everything is **phone-only, passive, receive-only** on a stock
+classes that implement it. Everything is **phone-only and passive** on a stock
 unrooted phone. Code lives under `millie2/android/app/src/main/java/com/millie/two/`.
 
 ---
 
 ## 1. Signal capture (the radios)
 
-**What:** Continuously listen to nearby Wi-Fi and Bluetooth, on the phone alone or with an
-optional CYD (ESP32) sensor over USB.
+**What:** Continuously listen to nearby Wi-Fi and Bluetooth on the phone.
 
 **How:**
 - **Phone Wi-Fi** — `MainActivity.scanWifi()` calls `WifiManager.startScan()` and reads
@@ -26,11 +25,8 @@ optional CYD (ESP32) sensor over USB.
   **Class of Device** (major class decoded), device type, and cached **SDP service UUIDs**. Note:
   discovery is an **active ~12 s inquiry** — the phone transmits — so it's the one non-passive
   feature, and it only finds currently-*discoverable* devices (most phones/headsets aren't).
-- **Optional CYD** — `CydLinkService` owns a USB-serial link to the ESP32, which streams raw
-  Wi-Fi management/control frames and BLE adverts the phone can't see (plus deauth/attack counts).
-- **Merge** — `ObservationState` keeps each radio identity's observations from each source
-  (PHONE / CYD) separately and de-dupes by sample id/order, so the same device seen by both
-  merges into one record without double-counting. Status shows `PHONE`, `CYD`, or `PHONE + CYD`.
+- **Dedup** — `ObservationState` keeps each radio identity's observations and de-dupes by
+  sample id / order, so repeated readings of one device never double-count.
 
 ---
 
@@ -141,10 +137,6 @@ device record yet, and it has no own-device safe-list, so a device of yours will
   the loose `capabilities` string, and only the AKM list is read so a GCMP-128 cipher (…08) isn't
   mistaken for an SAE AKM (…08).
 - **BLE advertisement swarm** — ≥25 new BLE addresses in 60 s (Flipper / Fast-Pair spam).
-
-**Attack detection (needs the CYD):** the ESP32 counts deauth / disassoc / probe-request frames;
-`MainActivity.handleAttackReport()` raises an **UNDER ATTACK** / probe-harvest banner. The phone
-can't see these frames on its own.
 
 ---
 

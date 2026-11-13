@@ -3,7 +3,7 @@ package com.millie.two;
 import org.json.*;
 import java.util.*;
 
-/** One radio/address identity with independent, ordered observations from each receiver. */
+/** One radio/address identity with independent, ordered observations from the phone. */
 final class ObservationState {
     static final class Sample {
         final String source; JSONObject data=new JSONObject(); String id="",session="";
@@ -16,8 +16,8 @@ final class ObservationState {
     boolean hasLocation(){return !Double.isNaN(lastLat)&&!Double.isNaN(lastLon);}
     static String address(String input){String hex=input==null?"":input.replace(":","").replace("-","").trim().toUpperCase(Locale.ROOT);if(!hex.matches("[0-9A-F]{12}"))return "";StringBuilder out=new StringBuilder();for(int i=0;i<12;i+=2){if(i>0)out.append(':');out.append(hex,i,i+2);}return out.toString();}
     Sample accept(JSONObject data,long now)throws JSONException {
-        String source=data.optString("_source","CYD").toUpperCase(Locale.ROOT);
-        if(!source.equals("PHONE")&&!source.equals("CYD"))return null;
+        String source=data.optString("_source","PHONE").toUpperCase(Locale.ROOT);
+        if(!source.equals("PHONE"))return null;
         long observed=data.optLong("_observedAt",data.optLong("_receivedAt",now));
         if(source.equals("PHONE")&&data.optString("t").equals("wifi")&&!data.has("_observedAt"))observed=now-Math.max(0,data.optLong("ageMs",0));
         observed=Math.max(1,Math.min(now,observed));
@@ -32,7 +32,7 @@ final class ObservationState {
         if(data.has("_lat")&&data.has("_lon")){lastLat=data.optDouble("_lat",lastLat);lastLon=data.optDouble("_lon",lastLon);lastFixAt=data.optLong("_fixAt",observed);lastAccuracy=data.optDouble("_acc",lastAccuracy);}
         return sample;
     }
-    String sourceLabel(){return sources.containsKey("PHONE")?(sources.containsKey("CYD")?"PHONE + CYD":"PHONE"):"CYD";}
+    String sourceLabel(){return "PHONE";}
     JSONObject metadata()throws JSONException {ArrayList<Sample> sorted=new ArrayList<>(sources.values());sorted.sort(Comparator.comparingLong(s->s.observedAt));JSONObject out=new JSONObject();for(Sample sample:sorted)out=merge(out,sample.data);return out;}
     static JSONObject merge(JSONObject previous,JSONObject incoming)throws JSONException {JSONObject out=new JSONObject(previous.toString());Iterator<String> keys=incoming.keys();while(keys.hasNext()){String key=keys.next();Object value=incoming.opt(key);if(value==null||value==JSONObject.NULL)continue;if(value instanceof String&&((String)value).isEmpty()&&!key.equals("ssid")&&!key.equals("name"))continue;if(value instanceof JSONObject&&out.opt(key) instanceof JSONObject)out.put(key,merge(out.getJSONObject(key),(JSONObject)value));else out.put(key,value);}return out;}
 }

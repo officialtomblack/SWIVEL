@@ -122,7 +122,7 @@ Because your log can include **your GPS location** on many of its lines — a re
 | 📷 | **Cameras** | Devices made by known camera brands — Ring, Wyze, Axis, Hikvision, Dahua, Reolink, Nest, Arlo and more — matched against a built-in manufacturer registry. Common router/base-station names (Spectrum, TP-Link, Netgear, ASUS, Linksys, Eero, Arlo bases) are filtered out so they don't cry wolf. |
 | 🏷️ | **Trackers following you** | Apple **Find My** / AirTag signatures, **Tile**, Samsung **SmartTag**, Chipolo, Pebblebee, and named trackers — plus a **"separated tracker is traveling with you"** alert for the classic AirTag-in-your-bag case. *(Implemented and wired up; not yet verified against a real separated tag on a device.)* |
 | 🚔 | **Public-safety gear** | Hardware from **Flock Safety, Axon/TASER, Motorola Solutions, WatchGuard Video, Digital Ally** — matched by manufacturer and Bluetooth identifiers and graded **High / Medium / Low** by how specific the match is. Look-alike companies (Flock Audio, Motorola Mobility, WatchGuard Technologies) are deliberately kept out so they can't trip a false alarm. |
-| ⚠️ | **Network threats** | **Evil-twin** fakes, **karma/pineapple** rogue access points, **security-downgrade** tricks, and **Bluetooth advertisement swarms** (Flipper / spam). With the optional [CYD board](#-optional-supercharge-it-with-a-cyd), also live **deauth / attack** detection. |
+| ⚠️ | **Network threats** | **Evil-twin** fakes, **karma/pineapple** rogue access points, **security-downgrade** tricks, and **Bluetooth advertisement swarms** (Flipper / spam). |
 | 📝 | **Full-capture logging** | Not just the scary stuff — it writes down *everything* it hears, every network and every gadget, so you have a complete record to review later. |
 | 📤 | **One-tap export** | CSV + KML + JSON + WigleCSV, all at once, streamed straight from the saved file so even huge captures never choke the phone. |
 | 🧨 | **One-tap panic wipe** | DURESS · CLEAR ALL erases every log and every export off the disk in a single tap. |
@@ -178,14 +178,6 @@ Try it on its built-in demo in **60 seconds**, and once you're capturing your ow
 Want a fast look at a single exported capture without the full pipeline? The bundled **[`tools/swivel_crosscheck.py`](tools/README.md)** fills in device makers, re-audits the randomized-address hard rule, and — opt-in only — looks up Wi-Fi networks on WiGLE or nearby ALPR/Flock cameras via OpenStreetMap, never uploading your capture file or GPS track. Full commands: **[tools/README.md](tools/README.md)**.
 
 For everything beyond a quick check — **every outing merged into one history, "followed" flags, the ranked report** — use **[DEBRIEF](https://github.com/officialtomblack/DEBRIEF)** above. It's the grown-up successor to this helper, and where the project's work goes now.
-
----
-
-## 📡 Optional: supercharge it with a CYD
-
-The phone works great entirely on its own. But a phone's radios physically *can't* see certain Wi-Fi traffic. Plug in a **CYD** (a cheap ESP32 board) over USB and SWIVEL gains what the phone can't hear by itself — think of it as x-ray vision for the **2.4 GHz Wi-Fi management/control frames** and live **deauth / attack detection** a phone is blind to, plus a second scanning radio.
-
-Plug it in, tap **CYD LINK**, accept the USB prompt — the status shows **PHONE + CYD** and the two feeds merge into one clean record. Setup guide: **[docs/millie2-cyd.md](docs/millie2-cyd.md)**.
 
 ---
 
