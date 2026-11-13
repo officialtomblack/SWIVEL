@@ -277,6 +277,7 @@ More detail: [feature map](docs/FEATURES.md) · [parallel scans & dedup](docs/mi
 ## 📜 Credits & license
 
 Maintained by [**@officialtomblack**](https://github.com/officialtomblack) — a privacy-focused, security-hardened fork.
+Questions, bug reports or security issues: [theredwake.sh@protonmail.com](mailto:theredwake.sh@protonmail.com)
 Originally created as **MILLIE** by *idea grey* ([upstream](https://github.com/IDEAGREY/MILLIE)); see [docs/project-history.md](docs/project-history.md) for the lineage.
 
 Licensed under the **MIT License** — © 2026 tcmidiservices. See [LICENSE](LICENSE).
