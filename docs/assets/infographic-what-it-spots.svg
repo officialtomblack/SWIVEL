@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 790" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">
+  <rect x="0" y="0" width="880" height="790" fill="#020403"/>
+  <rect x="8" y="8" width="864" height="774" rx="14" fill="none" stroke="#18291F" stroke-width="2"/>
+  <text x="40" y="78" fill="#55F5A0" font-size="46" font-weight="bold" letter-spacing="6">SWIVEL</text>
+  <text x="43" y="106" fill="#72847C" font-size="15" letter-spacing="2">// WHAT IT CAN SPOT</text>
+  <g transform="translate(772,66)" fill="none" stroke="#55F5A0" stroke-width="1.4">
+    <circle cx="0" cy="0" r="14" opacity="0.5"/><circle cx="0" cy="0" r="26" opacity="0.35"/><circle cx="0" cy="0" r="38" opacity="0.2"/>
+    <path d="M0 0 L34 -17" stroke="#55F5A0" opacity="0.8"/>
+  </g>
+  <circle cx="750" cy="52" r="3.5" fill="#FF9C45"/><circle cx="800" cy="78" r="3.5" fill="#4DA6FF"/><circle cx="742" cy="86" r="3" fill="#4DA6FF"/>
+  <line x1="40" y1="130" x2="840" y2="130" stroke="#18291F" stroke-width="2"/>
+
+  <!-- CAMERAS -->
+  <rect x="40" y="160" width="390" height="170" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="160" width="5" height="170" rx="2" fill="#FF9C45"/>
+  <text x="66" y="194" fill="#FF9C45" font-size="18" font-weight="bold" letter-spacing="1">CAMERAS</text>
+  <text x="66" y="224" fill="#D4E1DA" font-size="13.5">Devices by known camera brands — Ring,</text>
+  <text x="66" y="246" fill="#D4E1DA" font-size="13.5">Wyze, Nest, Arlo, Axis, Hikvision, Dahua…</text>
+  <text x="66" y="276" fill="#72847C" font-size="12.5">Common router / base-station names are</text>
+  <text x="66" y="296" fill="#72847C" font-size="12.5">filtered out so they don't cry wolf.</text>
+
+  <!-- TRACKERS -->
+  <rect x="450" y="160" width="390" height="170" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="450" y="160" width="5" height="170" rx="2" fill="#4DA6FF"/>
+  <text x="476" y="194" fill="#4DA6FF" font-size="18" font-weight="bold" letter-spacing="1">TRACKERS</text>
+  <text x="476" y="224" fill="#D4E1DA" font-size="13.5">AirTag, Tile, Samsung SmartTag, Chipolo,</text>
+  <text x="476" y="246" fill="#D4E1DA" font-size="13.5">Pebblebee and named trackers.</text>
+  <text x="476" y="276" fill="#72847C" font-size="12.5">Plus a "this one is separated and</text>
+  <text x="476" y="296" fill="#72847C" font-size="12.5">traveling with you" following alert.</text>
+
+  <!-- PUBLIC SAFETY -->
+  <rect x="40" y="346" width="390" height="170" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="346" width="5" height="170" rx="2" fill="#FF55B8"/>
+  <text x="66" y="380" fill="#FF55B8" font-size="18" font-weight="bold" letter-spacing="1">PUBLIC SAFETY</text>
+  <text x="66" y="410" fill="#D4E1DA" font-size="13.5">Flock Safety, Axon/TASER, Motorola</text>
+  <text x="66" y="432" fill="#D4E1DA" font-size="13.5">Solutions, WatchGuard Video, Digital Ally.</text>
+  <text x="66" y="462" fill="#72847C" font-size="12.5">Graded <tspan fill="#D4E1DA">High / Med / Low</tspan> by how specific</text>
+  <text x="66" y="482" fill="#72847C" font-size="12.5">the match is. Look-alike brands kept out.</text>
+
+  <!-- NETWORK THREATS -->
+  <rect x="450" y="346" width="390" height="170" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="450" y="346" width="5" height="170" rx="2" fill="#55F5A0"/>
+  <text x="476" y="380" fill="#55F5A0" font-size="18" font-weight="bold" letter-spacing="1">NETWORK THREATS</text>
+  <text x="476" y="410" fill="#D4E1DA" font-size="13.5">Evil-twin fakes, karma / pineapple rogue</text>
+  <text x="476" y="432" fill="#D4E1DA" font-size="13.5">access points, security-downgrade tricks,</text>
+  <text x="476" y="454" fill="#D4E1DA" font-size="13.5">and Bluetooth advert swarms (Flipper /</text>
+  <text x="476" y="476" fill="#D4E1DA" font-size="13.5">spam).</text>
+
+  <!-- LOG strip -->
+  <rect x="40" y="532" width="800" height="62" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="532" width="5" height="62" rx="2" fill="#72847C"/>
+  <text x="66" y="560" fill="#D4E1DA" font-size="15"><tspan fill="#72847C" font-weight="bold">FULL-CAPTURE LOG</tspan>  —  not just the scary stuff: every network and every</text>
+  <text x="66" y="582" fill="#D4E1DA" font-size="15">gadget it hears is written to disk, so you have the complete record.</text>
+
+  <rect x="40" y="610" width="800" height="100" rx="9" fill="#060A08" stroke="#55F5A0" stroke-width="1.3"/>
+  <text x="64" y="648" fill="#D4E1DA" font-size="16">A match means hardware <tspan fill="#55F5A0" font-weight="bold">made by</tspan> that vendor — not which product,</text>
+  <text x="64" y="674" fill="#D4E1DA" font-size="16">not that it's recording, not that anyone is present.</text>
+  <text x="64" y="700" fill="#55F5A0" font-size="16" font-weight="bold" letter-spacing="2">EVIDENCE, NOT PROOF.</text>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 760" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">
+  <rect x="0" y="0" width="880" height="760" fill="#020403"/>
+  <rect x="8" y="8" width="864" height="744" rx="14" fill="none" stroke="#18291F" stroke-width="2"/>
+  <text x="40" y="78" fill="#55F5A0" font-size="46" font-weight="bold" letter-spacing="6">SWIVEL</text>
+  <text x="43" y="106" fill="#72847C" font-size="15" letter-spacing="2">// PASSIVE — IT NEVER ATTACKS</text>
+  <g transform="translate(772,66)" fill="none" stroke="#55F5A0" stroke-width="1.4">
+    <circle cx="0" cy="0" r="14" opacity="0.5"/><circle cx="0" cy="0" r="26" opacity="0.35"/><circle cx="0" cy="0" r="38" opacity="0.2"/>
+    <path d="M0 0 L34 -17" stroke="#55F5A0" opacity="0.8"/>
+  </g>
+  <circle cx="750" cy="52" r="3.5" fill="#FF9C45"/><circle cx="800" cy="78" r="3.5" fill="#4DA6FF"/><circle cx="742" cy="86" r="3" fill="#4DA6FF"/>
+  <line x1="40" y1="130" x2="840" y2="130" stroke="#18291F" stroke-width="2"/>
+
+  <text x="60" y="176" fill="#55F5A0" font-size="16" letter-spacing="2">WHAT IT DOES</text>
+  <text x="475" y="176" fill="#FF55B8" font-size="16" letter-spacing="2">WHAT IT REFUSES TO DO</text>
+
+  <rect x="40" y="194" width="385" height="452" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="455" y="194" width="385" height="452" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+
+  <!-- DOES -->
+  <g fill="#D4E1DA" font-size="15">
+    <rect x="62" y="243" width="11" height="11" fill="#55F5A0"/><text x="86" y="253">Listens to Wi-Fi &amp; BLE in the air</text>
+    <rect x="62" y="301" width="11" height="11" fill="#55F5A0"/><text x="86" y="311">Records everything, instantly</text>
+    <rect x="62" y="359" width="11" height="11" fill="#55F5A0"/><text x="86" y="369">Names makers from a built-in list</text>
+    <rect x="62" y="417" width="11" height="11" fill="#55F5A0"/><text x="86" y="427">Runs fully offline — no cloud</text>
+    <rect x="62" y="475" width="11" height="11" fill="#55F5A0"/><text x="86" y="485">No account, no signup, no analytics</text>
+  </g>
+  <!-- NEVER -->
+  <g fill="#D4E1DA" font-size="15">
+    <rect x="477" y="243" width="11" height="11" fill="#FF55B8"/><text x="501" y="253">Deauth, jam or disrupt</text>
+    <rect x="477" y="301" width="11" height="11" fill="#FF55B8"/><text x="501" y="311">Inject packets or run attacks</text>
+    <rect x="477" y="359" width="11" height="11" fill="#FF55B8"/><text x="501" y="369">Join or log into networks</text>
+    <rect x="477" y="417" width="11" height="11" fill="#FF55B8"/><text x="501" y="427">Crack passwords</text>
+    <rect x="477" y="475" width="11" height="11" fill="#FF55B8"/><text x="501" y="485">Phone home or upload your data</text>
+  </g>
+  <text x="62" y="560" fill="#72847C" font-size="13">It sends only the ordinary "discovery" pings</text>
+  <text x="62" y="582" fill="#72847C" font-size="13">any phone sends — and nothing more.</text>
+  <text x="477" y="560" fill="#72847C" font-size="13">No root. No Termux. No special setup.</text>
+  <text x="477" y="582" fill="#72847C" font-size="13">Just a normal Android 8.0+ phone.</text>
+
+  <rect x="40" y="666" width="800" height="74" rx="9" fill="#060A08" stroke="#55F5A0" stroke-width="1.3"/>
+  <text x="64" y="700" fill="#D4E1DA" font-size="16">It's the <tspan fill="#55F5A0" font-weight="bold">same scanning your phone already does</tspan> every day —</text>
+  <text x="64" y="726" fill="#D4E1DA" font-size="16">SWIVEL just shows you the results, and writes them down.</text>
+</svg>

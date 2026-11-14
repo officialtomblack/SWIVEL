@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 720" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">
+  <rect x="0" y="0" width="880" height="720" fill="#020403"/>
+  <rect x="8" y="8" width="864" height="704" rx="14" fill="none" stroke="#18291F" stroke-width="2"/>
+  <text x="40" y="78" fill="#55F5A0" font-size="46" font-weight="bold" letter-spacing="6">SWIVEL</text>
+  <text x="43" y="106" fill="#72847C" font-size="15" letter-spacing="2">// READING THE RADAR SCOPE</text>
+  <g transform="translate(772,66)" fill="none" stroke="#55F5A0" stroke-width="1.4">
+    <circle cx="0" cy="0" r="14" opacity="0.5"/><circle cx="0" cy="0" r="26" opacity="0.35"/><circle cx="0" cy="0" r="38" opacity="0.2"/>
+    <path d="M0 0 L34 -17" stroke="#55F5A0" opacity="0.8"/>
+  </g>
+  <circle cx="750" cy="52" r="3.5" fill="#FF9C45"/><circle cx="800" cy="78" r="3.5" fill="#4DA6FF"/><circle cx="742" cy="86" r="3" fill="#4DA6FF"/>
+  <line x1="40" y1="130" x2="840" y2="130" stroke="#18291F" stroke-width="2"/>
+
+  <!-- radar scope -->
+  <g transform="translate(265,400)">
+    <circle cx="0" cy="0" r="200" fill="none" stroke="#18291F" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="135" fill="none" stroke="#18291F" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="70" fill="none" stroke="#18291F" stroke-width="1.5"/>
+    <line x1="-200" y1="0" x2="200" y2="0" stroke="#18291F" stroke-width="1"/>
+    <line x1="0" y1="-200" x2="0" y2="200" stroke="#18291F" stroke-width="1"/>
+    <!-- you -->
+    <circle cx="0" cy="0" r="6" fill="#55F5A0"/>
+    <text x="12" y="-10" fill="#55F5A0" font-size="12">YOU</text>
+    <!-- strong (near) -->
+    <circle cx="-38" cy="40" r="9" fill="#FF9C45"/>
+    <circle cx="44" cy="-30" r="8" fill="#FF9C45"/>
+    <!-- mid -->
+    <circle cx="90" cy="70" r="5" fill="#4DA6FF"/>
+    <circle cx="-110" cy="-55" r="4.5" fill="#FF9C45"/>
+    <!-- weak (far) -->
+    <circle cx="150" cy="-120" r="3" fill="#4DA6FF"/>
+    <circle cx="-160" cy="95" r="2.6" fill="#4DA6FF"/>
+    <!-- scale labels -->
+    <text x="0" y="-210" fill="#72847C" font-size="11" text-anchor="middle">weak · far  (−110 dBm)</text>
+    <text x="0" y="36" fill="#72847C" font-size="11" text-anchor="middle">strong · close (−20)</text>
+  </g>
+
+  <!-- key -->
+  <g>
+    <circle cx="500" cy="200" r="9" fill="#FF9C45"/>
+    <text x="524" y="196" fill="#D4E1DA" font-size="16">Bright / big dot near the middle</text>
+    <text x="524" y="218" fill="#72847C" font-size="13.5">= STRONG signal = the device is close</text>
+
+    <circle cx="500" cy="282" r="4" fill="#4DA6FF"/>
+    <text x="524" y="278" fill="#D4E1DA" font-size="16">Faint / small dot out at the edge</text>
+    <text x="524" y="300" fill="#72847C" font-size="13.5">= WEAK signal = the device is far</text>
+
+    <rect x="492" y="352" width="14" height="14" fill="#FF9C45"/><rect x="512" y="352" width="14" height="14" fill="#4DA6FF"/>
+    <text x="534" y="364" fill="#D4E1DA" font-size="16">AMBER = Wi-Fi   ·   BLUE = Bluetooth</text>
+
+    <text x="492" y="440" fill="#FF55B8" font-size="17" font-weight="bold">It shows STRENGTH —</text>
+    <text x="492" y="464" fill="#FF55B8" font-size="17" font-weight="bold">never DIRECTION.</text>
+    <text x="492" y="492" fill="#72847C" font-size="13.5">The scope can't point at where a device</text>
+    <text x="492" y="512" fill="#72847C" font-size="13.5">is — only how strong it's coming in.</text>
+  </g>
+
+  <rect x="40" y="612" width="800" height="78" rx="9" fill="#060A08" stroke="#55F5A0" stroke-width="1.3"/>
+  <text x="64" y="648" fill="#D4E1DA" font-size="16">Signal strength is a <tspan fill="#55F5A0" font-weight="bold">hint of distance</tspan> — it is not a location.</text>
+  <text x="64" y="674" fill="#D4E1DA" font-size="16">SWIVEL never pretends to point. Evidence, not proof.</text>
+</svg>

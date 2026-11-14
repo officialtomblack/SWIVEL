@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 650" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">
+  <rect x="0" y="0" width="880" height="650" fill="#020403"/>
+  <rect x="8" y="8" width="864" height="634" rx="14" fill="none" stroke="#18291F" stroke-width="2"/>
+  <text x="40" y="78" fill="#55F5A0" font-size="46" font-weight="bold" letter-spacing="6">SWIVEL</text>
+  <text x="43" y="106" fill="#72847C" font-size="15" letter-spacing="2">// ONE OUTING  →  EVERY OUTING, CONNECTED</text>
+  <g transform="translate(772,66)" fill="none" stroke="#55F5A0" stroke-width="1.4">
+    <circle cx="0" cy="0" r="14" opacity="0.5"/><circle cx="0" cy="0" r="26" opacity="0.35"/><circle cx="0" cy="0" r="38" opacity="0.2"/>
+    <path d="M0 0 L34 -17" stroke="#55F5A0" opacity="0.8"/>
+  </g>
+  <circle cx="750" cy="52" r="3.5" fill="#FF9C45"/><circle cx="800" cy="78" r="3.5" fill="#4DA6FF"/><circle cx="742" cy="86" r="3" fill="#4DA6FF"/>
+  <line x1="40" y1="130" x2="840" y2="130" stroke="#18291F" stroke-width="2"/>
+
+  <!-- SWIVEL panel -->
+  <rect x="40" y="170" width="350" height="320" rx="9" fill="#060A08" stroke="#55F5A0" stroke-width="1.3"/>
+  <text x="66" y="212" fill="#55F5A0" font-size="22" font-weight="bold" letter-spacing="2">SWIVEL</text>
+  <text x="66" y="238" fill="#72847C" font-size="13">the phone app</text>
+  <g fill="#D4E1DA" font-size="14.5">
+    <rect x="66" y="277" width="10" height="10" fill="#55F5A0"/><text x="88" y="286">Live radar of everything nearby</text>
+    <rect x="66" y="319" width="10" height="10" fill="#55F5A0"/><text x="88" y="328">A complete log of one outing</text>
+    <rect x="66" y="361" width="10" height="10" fill="#55F5A0"/><text x="88" y="370">Classifies cameras, trackers, gear</text>
+    <rect x="66" y="403" width="10" height="10" fill="#55F5A0"/><text x="88" y="412">Exports it — all on your phone</text>
+  </g>
+  <text x="66" y="462" fill="#72847C" font-size="13">It hears it.</text>
+
+  <!-- arrow + EXPORT -->
+  <text x="440" y="316" fill="#4DA6FF" font-size="13" text-anchor="middle" letter-spacing="1">EXPORT</text>
+  <path d="M405 330 H470 M458 320 L472 330 L458 340" stroke="#4DA6FF" stroke-width="2.4" fill="none"/>
+  <text x="440" y="360" fill="#72847C" font-size="11" text-anchor="middle">CSV · KML</text>
+  <text x="440" y="376" fill="#72847C" font-size="11" text-anchor="middle">JSON · Wigle</text>
+
+  <!-- DEBRIEF panel -->
+  <rect x="490" y="170" width="350" height="320" rx="9" fill="#060A08" stroke="#4DA6FF" stroke-width="1.3"/>
+  <text x="516" y="212" fill="#4DA6FF" font-size="22" font-weight="bold" letter-spacing="2">DEBRIEF</text>
+  <text x="516" y="238" fill="#72847C" font-size="13">the desktop companion</text>
+  <g fill="#D4E1DA" font-size="14.5">
+    <rect x="516" y="277" width="10" height="10" fill="#4DA6FF"/><text x="538" y="286">Merges every outing into one DB</text>
+    <rect x="516" y="319" width="10" height="10" fill="#4DA6FF"/><text x="538" y="328">Flags what followed you across</text>
+    <text x="538" y="347">places</text>
+    <rect x="516" y="375" width="10" height="10" fill="#4DA6FF"/><text x="538" y="384">Ranked, click-to-expand report</text>
+    <rect x="516" y="417" width="10" height="10" fill="#4DA6FF"/><text x="538" y="426">Offline — no accounts</text>
+  </g>
+  <text x="516" y="470" fill="#72847C" font-size="13">It tells you what it meant.</text>
+
+  <rect x="40" y="512" width="800" height="106" rx="9" fill="#060A08" stroke="#55F5A0" stroke-width="1.3"/>
+  <text x="64" y="552" fill="#D4E1DA" font-size="17"><tspan fill="#55F5A0" font-weight="bold">SWIVEL hears it. DEBRIEF tells you what it meant.</tspan></text>
+  <text x="64" y="580" fill="#D4E1DA" font-size="15">If you use SWIVEL more than once, DEBRIEF is what makes the captures add up.</text>
+  <text x="64" y="606" fill="#4DA6FF" font-size="14">→ github.com/officialtomblack/DEBRIEF</text>
+</svg>

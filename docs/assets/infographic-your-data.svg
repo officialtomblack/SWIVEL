@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 760" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">
+  <rect x="0" y="0" width="880" height="760" fill="#020403"/>
+  <rect x="8" y="8" width="864" height="744" rx="14" fill="none" stroke="#18291F" stroke-width="2"/>
+  <text x="40" y="78" fill="#55F5A0" font-size="46" font-weight="bold" letter-spacing="6">SWIVEL</text>
+  <text x="43" y="106" fill="#72847C" font-size="15" letter-spacing="2">// WHERE YOUR DATA LIVES — AND HOW TO WIPE IT</text>
+  <g transform="translate(772,66)" fill="none" stroke="#55F5A0" stroke-width="1.4">
+    <circle cx="0" cy="0" r="14" opacity="0.5"/><circle cx="0" cy="0" r="26" opacity="0.35"/><circle cx="0" cy="0" r="38" opacity="0.2"/>
+    <path d="M0 0 L34 -17" stroke="#55F5A0" opacity="0.8"/>
+  </g>
+  <circle cx="750" cy="52" r="3.5" fill="#FF9C45"/><circle cx="800" cy="78" r="3.5" fill="#4DA6FF"/><circle cx="742" cy="86" r="3" fill="#4DA6FF"/>
+  <line x1="40" y1="130" x2="840" y2="130" stroke="#18291F" stroke-width="2"/>
+
+  <!-- stage 1 on phone -->
+  <rect x="40" y="162" width="800" height="120" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <g transform="translate(78,222)" stroke="#55F5A0" fill="none" stroke-width="2.2">
+    <rect x="-18" y="-10" width="36" height="28" rx="3"/><path d="M-10 -10 v-8 a10 10 0 0 1 20 0 v8"/>
+  </g>
+  <text x="130" y="205" fill="#55F5A0" font-size="19" font-weight="bold">IT ALL STAYS ON YOUR PHONE</text>
+  <text x="130" y="233" fill="#D4E1DA" font-size="14">Saved in the app's own private folder — a locked box no other app can open.</text>
+  <text x="130" y="257" fill="#D4E1DA" font-size="14">Not in the cloud. No server. No account. <tspan fill="#55F5A0">Nothing is ever uploaded.</tspan></text>
+  <path d="M440 284 L440 306 M432 298 L440 308 L448 298" stroke="#55F5A0" stroke-width="2" fill="none"/>
+
+  <!-- stage 2 export -->
+  <rect x="40" y="312" width="800" height="120" rx="9" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <g transform="translate(78,372)" stroke="#4DA6FF" fill="none" stroke-width="2.2">
+    <path d="M0 -14 v22 M-9 -1 L0 8 L9 -1"/><path d="M-16 12 h32"/>
+  </g>
+  <text x="130" y="355" fill="#4DA6FF" font-size="19" font-weight="bold">WANT A COPY? TAP EXPORT</text>
+  <text x="130" y="383" fill="#D4E1DA" font-size="14">One tap = <tspan fill="#4DA6FF">CSV + KML + JSON + WigleCSV</tspan>, all at once.</text>
+  <text x="130" y="407" fill="#D4E1DA" font-size="14">You copy it to a computer via USB or Files. SWIVEL never sends it for you.</text>
+  <path d="M440 434 L440 456 M432 448 L440 458 L448 448" stroke="#FF55B8" stroke-width="2" fill="none"/>
+
+  <!-- stage 3 duress -->
+  <rect x="40" y="462" width="800" height="120" rx="9" fill="#060A08" stroke="#FF55B8" stroke-width="1.4"/>
+  <g transform="translate(78,522)" stroke="#FF55B8" fill="none" stroke-width="2.2">
+    <path d="M0 -16 L15 10 H-15 Z"/><path d="M0 -4 v8" stroke-width="2.6"/><circle cx="0" cy="12" r="1.4" fill="#FF55B8"/>
+  </g>
+  <text x="130" y="505" fill="#FF55B8" font-size="19" font-weight="bold">WANT IT ALL GONE? DURESS · CLEAR ALL</text>
+  <text x="130" y="533" fill="#D4E1DA" font-size="14">One tap wipes <tspan fill="#FF55B8">every log and every export</tspan> off the phone, instantly.</text>
+  <text x="130" y="557" fill="#D4E1DA" font-size="14">No "are you sure." No recovery. No leftovers. (Verified on a real device.)</text>
+
+  <rect x="40" y="612" width="800" height="118" rx="9" fill="#060A08" stroke="#55F5A0" stroke-width="1.3"/>
+  <text x="64" y="652" fill="#D4E1DA" font-size="16">Your log can include <tspan fill="#55F5A0" font-weight="bold">your GPS location</tspan> on many lines — a record of</text>
+  <text x="64" y="678" fill="#D4E1DA" font-size="16">where you were. That's exactly why it stays locked on your phone, and why</text>
+  <text x="64" y="704" fill="#D4E1DA" font-size="16">those files are kept out of the public code. <tspan fill="#55F5A0" font-weight="bold">Your map is yours.</tspan></text>
+</svg>

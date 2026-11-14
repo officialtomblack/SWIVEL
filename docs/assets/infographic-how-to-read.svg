@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 1120" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">
+  <!-- backdrop -->
+  <rect x="0" y="0" width="880" height="1120" fill="#020403"/>
+  <rect x="8" y="8" width="864" height="1104" rx="14" fill="none" stroke="#18291F" stroke-width="2"/>
+
+  <!-- header -->
+  <text x="40" y="78" fill="#55F5A0" font-size="46" font-weight="bold" letter-spacing="6">SWIVEL</text>
+  <text x="43" y="106" fill="#72847C" font-size="15" letter-spacing="2">// HOW TO READ THE APP</text>
+  <!-- tiny radar glyph -->
+  <g transform="translate(772,66)" fill="none" stroke="#55F5A0" stroke-width="1.4">
+    <circle cx="0" cy="0" r="14" opacity="0.5"/><circle cx="0" cy="0" r="26" opacity="0.35"/><circle cx="0" cy="0" r="38" opacity="0.2"/>
+    <path d="M0 0 L34 -17" stroke="#55F5A0" opacity="0.8"/>
+  </g>
+  <circle cx="750" cy="52" r="3.5" fill="#FF9C45"/><circle cx="800" cy="78" r="3.5" fill="#4DA6FF"/><circle cx="742" cy="86" r="3" fill="#4DA6FF"/>
+  <line x1="40" y1="130" x2="840" y2="130" stroke="#18291F" stroke-width="2"/>
+
+  <!-- the two colors -->
+  <text x="40" y="172" fill="#55F5A0" font-size="15" letter-spacing="3">THE TWO COLORS YOU'LL SEE</text>
+  <circle cx="54" cy="212" r="10" fill="#FF9C45"/>
+  <text x="76" y="218" fill="#D4E1DA" font-size="18"><tspan fill="#FF9C45" font-weight="bold">AMBER</tspan>  = Wi-Fi networks</text>
+  <circle cx="54" cy="252" r="10" fill="#4DA6FF"/>
+  <text x="76" y="258" fill="#D4E1DA" font-size="18"><tspan fill="#4DA6FF" font-weight="bold">BLUE</tspan>   = Bluetooth / BLE devices</text>
+  <text x="40" y="296" fill="#72847C" font-size="13">Big dot = strong signal (close).  Faint dot = weak (far).  The radar never points a direction — only strength.</text>
+
+  <!-- mini radar on the right -->
+  <g transform="translate(720,230)">
+    <circle cx="0" cy="0" r="24" fill="none" stroke="#18291F" stroke-width="1.4"/>
+    <circle cx="0" cy="0" r="48" fill="none" stroke="#18291F" stroke-width="1.4"/>
+    <circle cx="0" cy="0" r="70" fill="none" stroke="#18291F" stroke-width="1.4"/>
+    <line x1="-70" y1="0" x2="70" y2="0" stroke="#18291F" stroke-width="1"/>
+    <line x1="0" y1="-70" x2="0" y2="70" stroke="#18291F" stroke-width="1"/>
+    <circle cx="-18" cy="22" r="5" fill="#FF9C45"/>
+    <circle cx="34" cy="-30" r="3" fill="#FF9C45"/>
+    <circle cx="12" cy="52" r="4" fill="#4DA6FF"/>
+    <circle cx="-44" cy="-28" r="2.5" fill="#4DA6FF"/>
+  </g>
+  <line x1="40" y1="330" x2="840" y2="330" stroke="#18291F" stroke-width="2"/>
+
+  <!-- the six tabs -->
+  <text x="40" y="372" fill="#55F5A0" font-size="15" letter-spacing="3">THE SIX TABS ALONG THE BOTTOM</text>
+
+  <!-- card 1 LIVE -->
+  <rect x="40" y="392" width="800" height="58" rx="7" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="392" width="5" height="58" rx="2" fill="#55F5A0"/>
+  <text x="64" y="418" fill="#55F5A0" font-size="17" font-weight="bold" letter-spacing="1">LIVE</text>
+  <text x="64" y="440" fill="#D4E1DA" font-size="14">Everything, the moment it arrives, on the radar scope.</text>
+
+  <!-- card 2 CAMERAS -->
+  <rect x="40" y="458" width="800" height="58" rx="7" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="458" width="5" height="58" rx="2" fill="#FF9C45"/>
+  <text x="64" y="484" fill="#FF9C45" font-size="17" font-weight="bold" letter-spacing="1">CAMERAS</text>
+  <text x="64" y="506" fill="#D4E1DA" font-size="14">Devices made by known camera brands — Ring, Wyze, Nest, Arlo, Axis…</text>
+
+  <!-- card 3 TRACKERS -->
+  <rect x="40" y="524" width="800" height="58" rx="7" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="524" width="5" height="58" rx="2" fill="#4DA6FF"/>
+  <text x="64" y="550" fill="#4DA6FF" font-size="17" font-weight="bold" letter-spacing="1">TRACKERS</text>
+  <text x="64" y="572" fill="#D4E1DA" font-size="14">AirTags · Tiles · SmartTags — plus a "this one is following you" alert.</text>
+
+  <!-- card 4 PUBLIC SAFETY -->
+  <rect x="40" y="590" width="800" height="58" rx="7" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="590" width="5" height="58" rx="2" fill="#FF55B8"/>
+  <text x="64" y="616" fill="#FF55B8" font-size="17" font-weight="bold" letter-spacing="1">PUBLIC SAFETY</text>
+  <text x="64" y="638" fill="#D4E1DA" font-size="14">Surveillance &amp; law-enforcement vendor gear, graded High / Med / Low.</text>
+
+  <!-- card 5 ALERTS -->
+  <rect x="40" y="656" width="800" height="58" rx="7" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="656" width="5" height="58" rx="2" fill="#FF9C45"/>
+  <text x="64" y="682" fill="#FF9C45" font-size="17" font-weight="bold" letter-spacing="1">ALERTS</text>
+  <text x="64" y="704" fill="#D4E1DA" font-size="14">Everything that beeped out loud, newest first — tap any one for the evidence.</text>
+
+  <!-- card 6 MORE -->
+  <rect x="40" y="722" width="800" height="58" rx="7" fill="#060A08" stroke="#18291F" stroke-width="1.2"/>
+  <rect x="40" y="722" width="5" height="58" rx="2" fill="#55F5A0"/>
+  <text x="64" y="748" fill="#55F5A0" font-size="17" font-weight="bold" letter-spacing="1">MORE</text>
+  <text x="64" y="770" fill="#D4E1DA" font-size="14">Your controls: capture on/off · go-quiet · export · DURESS panic wipe.</text>
+
+  <line x1="40" y1="812" x2="840" y2="812" stroke="#18291F" stroke-width="2"/>
+
+  <!-- the beeps -->
+  <text x="40" y="854" fill="#55F5A0" font-size="15" letter-spacing="3">WHAT THE BEEPS MEAN</text>
+  <circle cx="52" cy="892" r="7" fill="#FF9C45"/><circle cx="74" cy="892" r="7" fill="#FF9C45"/><circle cx="96" cy="892" r="7" fill="#FF9C45"/>
+  <text x="120" y="898" fill="#D4E1DA" font-size="15"><tspan fill="#FF9C45" font-weight="bold">THREE BEEPS</tspan>  =  high-confidence hit — body-cam, ALPR &amp; in-car makers (Axon, Flock…).</text>
+  <circle cx="52" cy="936" r="7" fill="#72847C"/>
+  <text x="120" y="942" fill="#D4E1DA" font-size="15"><tspan fill="#72847C" font-weight="bold">ONE BEEP</tspan>     =  lower-confidence — gear also sold widely (radios, CCTV). Expect false alarms.</text>
+
+  <!-- footer: evidence not proof -->
+  <rect x="40" y="978" width="800" height="104" rx="9" fill="#060A08" stroke="#55F5A0" stroke-width="1.3"/>
+  <text x="64" y="1016" fill="#D4E1DA" font-size="16">A match means hardware <tspan fill="#55F5A0" font-weight="bold">made by</tspan> that vendor —</text>
+  <text x="64" y="1042" fill="#D4E1DA" font-size="16">not proof it's recording, and <tspan fill="#FF55B8" font-weight="bold">never</tspan> proof "a cop" is here.</text>
+  <text x="64" y="1068" fill="#55F5A0" font-size="16" font-weight="bold" letter-spacing="2">EVIDENCE, NOT PROOF.</text>
+</svg>
