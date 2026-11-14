@@ -19,6 +19,10 @@
   <img alt="root" src="https://img.shields.io/badge/root-not%20required-55F5A0?style=flat-square">
 </p>
 
+<p align="center">
+  📖 <strong>New — a full guide:</strong> the <a href="https://github.com/officialtomblack/SWIVEL/wiki">SWIVEL Wiki</a> has an FAQ, a plain-English glossary, and a walkthrough of every screen.
+</p>
+
 ---
 
 ## 👁️ What SWIVEL does for you
