@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace">
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="45%" r="42%">
+      <stop offset="0%" stop-color="#55F5A0" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#55F5A0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="0" y="0" width="1024" height="500" fill="#020403"/>
+  <rect x="0" y="0" width="1024" height="500" fill="url(#glow)"/>
+
+  <!-- radar motif -->
+  <g transform="translate(830,250)">
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#18291F" stroke-width="1.6"/>
+    <circle cx="0" cy="0" r="110" fill="none" stroke="#18291F" stroke-width="1.6"/>
+    <circle cx="0" cy="0" r="158" fill="none" stroke="#18291F" stroke-width="1.6"/>
+    <line x1="-158" y1="0" x2="158" y2="0" stroke="#18291F" stroke-width="1"/>
+    <line x1="0" y1="-158" x2="0" y2="158" stroke="#18291F" stroke-width="1"/>
+    <path d="M0 0 L150 -52" stroke="#55F5A0" stroke-width="1.6" opacity="0.85"/>
+    <circle cx="0" cy="0" r="5" fill="#55F5A0"/>
+    <circle cx="-34" cy="30" r="7" fill="#FF9C45"/>
+    <circle cx="48" cy="-40" r="6" fill="#FF9C45"/>
+    <circle cx="86" cy="64" r="5" fill="#4DA6FF"/>
+    <circle cx="-96" cy="-54" r="4" fill="#4DA6FF"/>
+    <circle cx="120" cy="-110" r="3" fill="#4DA6FF"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="64" y="240" fill="#55F5A0" font-size="104" font-weight="bold" letter-spacing="8">SWIVEL</text>
+  <text x="70" y="294" fill="#D4E1DA" font-size="25">See what's broadcasting around you.</text>
+  <text x="70" y="330" fill="#72847C" font-size="17">Wi-Fi · Bluetooth · trackers · cameras — passive &amp; offline.</text>
+
+  <!-- color key -->
+  <circle cx="78" cy="372" r="7" fill="#FF9C45"/><text x="92" y="378" fill="#72847C" font-size="15">Wi-Fi</text>
+  <circle cx="178" cy="372" r="7" fill="#4DA6FF"/><text x="192" y="378" fill="#72847C" font-size="15">Bluetooth</text>
+
+  <!-- bottom strip -->
+  <line x1="64" y1="430" x2="960" y2="430" stroke="#18291F" stroke-width="1.5"/>
+  <text x="64" y="462" fill="#55F5A0" font-size="16" letter-spacing="2">PASSIVE · NO ATTACKS      NO CLOUD      NO ACCOUNT      ANDROID 8+</text>
+</svg>
